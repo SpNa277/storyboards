@@ -110,7 +110,7 @@ let init = function(){
     //
     document.addEventListener("keydown", onKeyDown, false);
 
-    window.addEventListener('mousemove', (event) => pickPosition.setPosition(event, renderer.domElement));
+    window.addEventListener('click', (event) => pickPosition.setPosition(event, renderer.domElement));
     window.addEventListener('mouseout', (event) => pickPosition.reset());
     window.addEventListener('mouseleave', (event) => pickPosition.reset());
 
@@ -261,13 +261,17 @@ function dragControl(){
 
     dragControls.addEventListener('dragstart', function(event){
         controls.enabled = false;
-        event.object.material.emissive.set( 0xaaaaaa );
+       //event.object.material.emissive.set( 0x666666 );
     });
     dragControls.addEventListener('dragend', function(event){
         controls.enabled = true;
         event.object.material.emissive.set( 0x000000 );
         //event.object.position.y = 0.2; 
     });
+    dragControls.addEventListener('drag', function(event){
+        event.object.material.emissive.set( 0x666666 );
+    });
+
 }
 // ----------------------------------------------------------------------------
 //  End of DragControl Function
@@ -314,11 +318,10 @@ function onKeyDown(e){
 // ----------------------------------------------------------------------------
 //  Render Function
 // ----------------------------------------------------------------------------
-function render(time) {
-    time *= 0.001;
+function render() {
     controls.update();
     renderer.render( scene, camera );
-    picker.pick(pickPosition, scene, camera, time, objects);
+    picker.pick(pickPosition, camera, objects);
    requestAnimationFrame(render);
 }
 // ----------------------------------------------------------------------------

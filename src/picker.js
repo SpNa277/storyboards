@@ -8,10 +8,10 @@ export class Picker {
     this.pickedObject = null;
     this.pickedObjectSavedColor = 0;
   }
-  pick(normalizedPosition, scene, camera, time, objects) {
+  pick(normalizedPosition, camera, objects) {
     // restore the color if there is a picked object
     if (this.pickedObject) {
-      this.pickedObject.material.emissive.setHex(this.pickedObjectSavedColor);
+      this.pickedObject.material.emissive.set(0x000000);
       this.pickedObject = undefined;
     }
 
@@ -23,11 +23,9 @@ export class Picker {
       // pick the first object. It's the closest one
       this.pickedObject = intersectedObjects[0].object;
       // save its color
-      this.pickedObjectSavedColor = this.pickedObject.material.emissive.getHex();
+      //this.pickedObjectSavedColor = this.pickedObject.material.emissive.getHex();
       // set its emissive color to flashing red/yellow
-      this.pickedObject.material.emissive.setHex(
-        (time * 8) % 2 > 1 ? 0xffff00 : 0xff0000
-      );
+      this.pickedObject.material.emissive.set(0x901e1e);
     }
   }
 }
