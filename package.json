@@ -1,0 +1,23 @@
+{
+  "name": "storyboards",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "three": "^0.127.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SpNa277/storyboards.git"
+  },
+  "author": "Nathalie Spicher",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SpNa277/storyboards/issues"
+  },
+  "homepage": "https://github.com/SpNa277/storyboards#readme"
+}
