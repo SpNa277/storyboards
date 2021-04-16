@@ -3,6 +3,8 @@ import { GLTFLoader } from '../node_modules/three/examples/jsm/loaders/GLTFLoade
 import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js';
 import { DragControls } from '../node_modules/three/examples/jsm/controls/DragControls.js';
 import { TransformControls } from '../node_modules/three/examples/jsm/controls/TransformControls.js'
+import { Picker, PickPosition } from './picker.js';
+
 
 // ----------------------------------------------------------------------------
 //  global variables 
@@ -24,8 +26,15 @@ let ADD;
 // ----------------------------------------------------------------------------
 
 
-window.addEventListener('click', onClick, false);
 window.requestAnimationFrame(render);
+
+  
+const picker = new Picker();
+const pickPosition = new PickPosition();
+
+
+   
+
 
 // ----------------------------------------------------------------------------
 //  Init Function - initialize the project
@@ -92,14 +101,19 @@ let init = function(){
     let pmremGenerator = new THREE.PMREMGenerator( renderer );
     pmremGenerator.compileEquirectangularShader();
 
-    // --- load function for window resize --- //
-    resize();
+
+
 
     // --- Drag function --- //
     dragControl();
 
     //
     document.addEventListener("keydown", onKeyDown, false);
+
+    window.addEventListener('mousemove', (event) => pickPosition.setPosition(event, renderer.domElement));
+    window.addEventListener('mouseout', (event) => pickPosition.reset());
+    window.addEventListener('mouseleave', (event) => pickPosition.reset());
+
 
 };
 // ----------------------------------------------------------------------------
@@ -110,9 +124,10 @@ let init = function(){
 // ----------------------------------------------------------------------------
 //  OnClick Function - adding gltf-objects by clicking on the menu
 // ----------------------------------------------------------------------------
-function onClick(){
+
     let addingMan = document.getElementById("man");
     addingMan.addEventListener("click", addMan, false);
+
     function addMan(){
         let loader = new GLTFLoader();
         loader.load("../src/img/man.glb", function(gltf){ 
@@ -121,7 +136,8 @@ function onClick(){
             console.log(figure);
             figure.position.set(-20,2,2);
             scene.add(figure);
-            objects.push(figure);                                
+            objects.push(figure);  
+                         
         },
         function(xhr){
             console.log((xhr.loaded / xhr.total*100)+ '% loaded');
@@ -230,7 +246,7 @@ function onClick(){
         });
     }
 
-}
+
 // ----------------------------------------------------------------------------
 // End of OnClick Function
 // ----------------------------------------------------------------------------
@@ -261,15 +277,14 @@ function dragControl(){
 // ----------------------------------------------------------------------------
 //  Resize Function - reports the window size each time it is resized
 // ----------------------------------------------------------------------------
-function resize(){
-    window.addEventListener('resize', onWindowResize, false);
+window.addEventListener('resize', onWindowResize, false);
 
-    function onWindowResize(){
+
+function onWindowResize(){
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
     renderer.setSize(window.innerWidth, window.innerHeight);
-    }
 }
 // ----------------------------------------------------------------------------
 //  End of Resize Function
@@ -295,12 +310,15 @@ function onKeyDown(e){
 // ----------------------------------------------------------------------------
 
 
+
 // ----------------------------------------------------------------------------
 //  Render Function
 // ----------------------------------------------------------------------------
-function render() {
+function render(time) {
+    time *= 0.001;
     controls.update();
     renderer.render( scene, camera );
+    picker.pick(pickPosition, scene, camera, time, objects);
    requestAnimationFrame(render);
 }
 // ----------------------------------------------------------------------------
