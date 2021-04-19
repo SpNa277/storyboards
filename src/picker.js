@@ -24,7 +24,7 @@ export class Picker {
       this.pickedObject = intersectedObjects[0].object;
       // save its color
       //this.pickedObjectSavedColor = this.pickedObject.material.emissive.getHex();
-      // set its emissive color to flashing red/yellow
+      // set its emissive color 
       this.pickedObject.material.emissive.set(0x901e1e);
     }
   }
@@ -53,5 +53,5 @@ function getCanvasRelativePosition(event, domElement) {
   return {
     x: ((event.clientX - rect.left) * domElement.width) / rect.width,
     y: ((event.clientY - rect.top) * domElement.height) / rect.height,
-  };
+  };  
 }

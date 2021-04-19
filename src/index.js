@@ -146,8 +146,7 @@ let init = function(){
             console.log(figure);
             figure.position.set(-20,2,2);
             scene.add(figure);
-            objects.push(figure);  
-                         
+            objects.push(figure);                         
         },
         function(xhr){
             console.log((xhr.loaded / xhr.total*100)+ '% loaded');
@@ -268,7 +267,7 @@ let init = function(){
 // ----------------------------------------------------------------------------
 function dragControl(){
     let dragControls = new DragControls(objects, camera, renderer.domElement);
-
+  
     dragControls.addEventListener('dragstart', function(event){
         controls.enabled = false;
        //event.object.material.emissive.set( 0x666666 );
@@ -280,6 +279,7 @@ function dragControl(){
     });
     dragControls.addEventListener('drag', function(event){
         event.object.material.emissive.set( 0x666666 );
+        event.object.position.y = 0;
     });
 
 }
