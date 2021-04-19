@@ -43,12 +43,15 @@ let init = function(){
 
     // --- create the scene --- //
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x87CEEB);
+    scene.background = new THREE.Color(0xeeeeee );
+    
+
+				
     
 
     // --- create and locate the camera --- //
     camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 1000);
-    camera.position.set(0, 5, 20);
+    camera.position.set(0, 7, 20);
 
     // --- create the light --- //
     light = new THREE.AmbientLight(0xffffff);
@@ -66,11 +69,17 @@ let init = function(){
     document.body.appendChild(renderer.domElement);
    
     // --- create the floor --- // 
-    const floorGometry = new THREE.PlaneGeometry( 400, 400 );
-    const floorMaterial = new THREE.MeshBasicMaterial( {color: 0x567d46} );
+    /*const floorGometry = new THREE.PlaneGeometry( 400, 400 );
+    const floorMaterial = new THREE.MeshBasicMaterial( {color: 0x0707bf} );
     const floor = new THREE.Mesh( floorGometry, floorMaterial );
     floor.rotation.x = - Math.PI / 2;
-    scene.add( floor );
+    scene.add( floor );*/
+
+    const grid = new THREE.GridHelper( 100, 40, 0x000000, 0x000000 );
+    grid.material.opacity = 0.1;
+    grid.material.depthWrite = false; // avoid z-fighting
+    grid.material.transparent = true;
+    scene.add( grid );
 
     // --- create the storyboard with different squares--- //
     const boardGeometry = new THREE.BoxGeometry(10, 1, 10);
@@ -101,7 +110,8 @@ let init = function(){
     let pmremGenerator = new THREE.PMREMGenerator( renderer );
     pmremGenerator.compileEquirectangularShader();
 
-
+    
+    
 
 
     // --- Drag function --- //
