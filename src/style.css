@@ -39,7 +39,7 @@ body{
 }
 
 .subnav-content {
-    display: none;
+    display:none;
     position: absolute;
     left: 0;
     background-color:grey;
@@ -60,4 +60,14 @@ body{
 
 .subnav:hover .subnav-content {
     display: block;
+}
+
+.img1{
+    width: 50px;
+    height: 100px;
+}
+
+.img2{
+    width: 100px;
+    height: 100px;
 }
