@@ -44,7 +44,7 @@
             <div class="subnav-content">
                 <a id="meetingroom" href="#"><img class="img2" src="img/meeting_room.png" alt="meeting_room"><span style="display: block">Meeting Room</span></img></a>
             </div>
-        </div> 
+        </div>
         </div>
 
         <!-- Start container for the object properties  -->
@@ -58,6 +58,20 @@
             <div class="control">Height: </div>
             <div class="control">Depth: </div>
         </fieldset>
+
+        <!-- that the dropdown stayes-->
+        <!--based on idea: https://stackoverflow.com/questions/41545067/how-to-change-hover-menu-to-clickable-menu-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script>
+            $('.subnavbtn').click(function () {
+            var isvisible = $(this).next('.subnav-content').is(":visible")
+            $('.subnav-content:visible').hide();
+            if (!isvisible)
+                {
+                    $(this).next('.subnav-content').toggle()
+                }
+            })
+        </script>
 
         <script src="index.js" type="module"></script>
     </body>    
