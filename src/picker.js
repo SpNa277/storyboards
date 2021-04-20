@@ -2,6 +2,7 @@ import * as THREE from '../node_modules/three/build/three.module.js';
 
 
 //based on https://threejsfundamentals.org/threejs/lessons/threejs-picking.html
+//picks/selects the closest object by clicking on it and changing the color to red
 export class Picker {
   constructor() {
     this.raycaster = new THREE.Raycaster();
@@ -30,6 +31,7 @@ export class Picker {
   }
 }
 
+//to track where the mouse is
 export class PickPosition {
   constructor() {
     this.x = undefined;

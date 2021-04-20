@@ -13,7 +13,7 @@ let scene, camera, renderer, light, controls;
 
 let objects = [];
 
-let board, storyboard;
+let board, board_child, storyboard;
 
 const LEFT = 37, RIGHT = 39, UP = 38, DOWN = 40;
 let ADD;
@@ -43,7 +43,7 @@ let init = function(){
 
     // --- create the scene --- //
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xeeeeee );
+    scene.background = new THREE.Color(0x777c8e);
     
 
 				
@@ -75,27 +75,31 @@ let init = function(){
     floor.rotation.x = - Math.PI / 2;
     scene.add( floor );*/
 
-    const grid = new THREE.GridHelper( 100, 40, 0x000000, 0x000000 );
+    const grid = new THREE.GridHelper( 100, 40, 0xeeeeee, 0xeeeeee );
     grid.material.opacity = 0.1;
     grid.material.depthWrite = false; // avoid z-fighting
     grid.material.transparent = true;
     scene.add( grid );
 
     // --- create the storyboard with different squares--- //
-    const boardGeometry = new THREE.BoxGeometry(10, 1, 10);
-    const boardMaterial = new THREE.MeshBasicMaterial( {color: 0x444444 });
-                    
+    const boardGeometry = new THREE.BoxGeometry(10, 0.1, 10);
+    const boardMaterial = new THREE.MeshLambertMaterial( {color: 0xeeeeee, side:THREE.DoubleSide });
+    const boardGeometry_child = new THREE.BoxGeometry(9, 0.11, 8);
+    const boardMaterial_child = new THREE.MeshLambertMaterial( {color: 0xc6c2c2, side:THREE.DoubleSide });
+
     storyboard = new THREE.Group();
 
     for (let x = 0; x < 3; x++) {
         for (let z = 0; z < 2; z++) {
             
             board = new THREE.Mesh(boardGeometry, boardMaterial);
+            board_child = new THREE.Mesh(boardGeometry_child, boardMaterial_child);
 
             board.position.x = x * 12;
             board.position.z = z * 12;
-            //board.position.set(x*10, 0, z*10);
+
             storyboard.add(board);
+            board.add(board_child);
         }
     }
     scene.add(storyboard);
@@ -121,8 +125,8 @@ let init = function(){
     document.addEventListener("keydown", onKeyDown, false);
 
     window.addEventListener('click', (event) => pickPosition.setPosition(event, renderer.domElement));
-    window.addEventListener('mouseout', (event) => pickPosition.reset());
-    window.addEventListener('mouseleave', (event) => pickPosition.reset());
+    window.addEventListener('mouseout', () => pickPosition.reset());
+    window.addEventListener('mouseleave', () => pickPosition.reset());
 
 
 };
