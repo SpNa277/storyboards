@@ -3,6 +3,7 @@ import { GLTFLoader } from '../node_modules/three/examples/jsm/loaders/GLTFLoade
 import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js';
 import { DragControls } from '../node_modules/three/examples/jsm/controls/DragControls.js';
 import { TransformControls } from '../node_modules/three/examples/jsm/controls/TransformControls.js'
+import { CSS3DRenderer } from '/node_modules/three/examples/jsm/renderers/CSS3DRenderer.js'
 import { Picker, PickPosition } from './picker.js';
 
 
@@ -13,13 +14,16 @@ let scene, camera, renderer, light, controls;
 
 let objects = [];
 
-let board, board_child, storyboard;
+let board, board_child, board_wall, storyboard;
 
 const LEFT = 37, RIGHT = 39, UP = 38, DOWN = 40;
 let ADD;
 
 //let raycaster = new THREE.Raycaster();
 //let mouse = new THREE.Vector2();
+
+let text = '<div>' + '<h1>Scene 1</h1>' + '</div>';
+let cssElement;
 
 // ----------------------------------------------------------------------------
 // end of global variables
@@ -44,10 +48,6 @@ let init = function(){
     // --- create the scene --- //
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x777c8e);
-    
-
-				
-    
 
     // --- create and locate the camera --- //
     camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 1000);
@@ -67,41 +67,56 @@ let init = function(){
     renderer.outputEncoding = THREE.sRGBEncoding; //configure textures referenced from .glb
     // --- to be able to locate on the browser --- //
     document.body.appendChild(renderer.domElement);
+
    
     // --- create the floor --- // 
-    /*const floorGometry = new THREE.PlaneGeometry( 400, 400 );
-    const floorMaterial = new THREE.MeshBasicMaterial( {color: 0x0707bf} );
+    const floorGometry = new THREE.PlaneGeometry( 400, 80 );
+    const floorMaterial = new THREE.MeshBasicMaterial( {color: 0xaaaaaa} );
     const floor = new THREE.Mesh( floorGometry, floorMaterial );
     floor.rotation.x = - Math.PI / 2;
-    scene.add( floor );*/
+    scene.add( floor );
 
-    const grid = new THREE.GridHelper( 100, 40, 0xeeeeee, 0xeeeeee );
-    grid.material.opacity = 0.1;
+    /*const grid = new THREE.GridHelper(1000, 200);
+    grid.material.opacity = 0.2;
+    grid.color = 0xeeeeee;
     grid.material.depthWrite = false; // avoid z-fighting
     grid.material.transparent = true;
-    scene.add( grid );
+    scene.add( grid );*/
 
     // --- create the storyboard with different squares--- //
-    const boardGeometry = new THREE.BoxGeometry(10, 0.1, 10);
+    const boardGeometry = new THREE.BoxGeometry(20, 0.9, 20);
     const boardMaterial = new THREE.MeshLambertMaterial( {color: 0xeeeeee, side:THREE.DoubleSide });
-    const boardGeometry_child = new THREE.BoxGeometry(9, 0.11, 8);
+    const boardGeometry_child = new THREE.BoxGeometry(19, 1, 18);
     const boardMaterial_child = new THREE.MeshLambertMaterial( {color: 0xc6c2c2, side:THREE.DoubleSide });
+    const boardGeometry_wall = new THREE.BoxGeometry(20, 15, 0.9);
 
     storyboard = new THREE.Group();
 
-    for (let x = 0; x < 3; x++) {
-        for (let z = 0; z < 2; z++) {
+    for (let x = 0; x < 8; x++) {
             
-            board = new THREE.Mesh(boardGeometry, boardMaterial);
-            board_child = new THREE.Mesh(boardGeometry_child, boardMaterial_child);
+        board = new THREE.Mesh(boardGeometry, boardMaterial);
+        board_child = new THREE.Mesh(boardGeometry_child, boardMaterial_child);
+        board_wall = new THREE.Mesh(boardGeometry_wall, boardMaterial);
 
-            board.position.x = x * 12;
-            board.position.z = z * 12;
+        board.position.x = x * 50;
 
-            storyboard.add(board);
-            board.add(board_child);
-        }
+        storyboard.add(board);
+        board.add(board_child);
+
+        board_wall.position.y = 7;
+        board_wall.position.z = -10;
+
+        board.add(board_wall);
+
+        
+       /* // --- create the css Element for the Text --//
+        cssElement = createCSS3DObject(text);
+        cssElement.position.set(5,5,5);
+        board_wall.add(cssElement);*/
+    
     }
+
+
     scene.add(storyboard);
     // -------------------------------------- end of creating the storyboard
                    
@@ -134,7 +149,22 @@ let init = function(){
 //  End of Init Function
 // ----------------------------------------------------------------------------
 
+/*function createCSS3DObject(s) {
+    // convert the string to dome elements
+    var wrapper = document.createElement('div');
+    wrapper.innerHTML = s;
+    var div = wrapper.firstChild;
 
+    // set some values on the div to style it, standard CSS
+    div.style.width = '370px';
+    div.style.height = '370px';
+    div.style.opacity = 0.7;
+    div.style.background = new THREE.Color(Math.random() * 0xffffff).getStyle();
+
+    // create a CSS3Dobject and return it.
+    var object = new THREE.CSS3DObject(div);
+    return object;
+}*/
 // ----------------------------------------------------------------------------
 //  OnClick Function - adding gltf-objects by clicking on the menu
 // ----------------------------------------------------------------------------
