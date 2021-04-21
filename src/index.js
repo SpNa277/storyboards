@@ -92,7 +92,7 @@ let init = function(){
 
     storyboard = new THREE.Group();
 
-    for (let x = 0; x < 8; x++) {
+    for (let x = 0; x < 1; x++) {
             
         board = new THREE.Mesh(boardGeometry, boardMaterial);
         board_child = new THREE.Mesh(boardGeometry_child, boardMaterial_child);
@@ -116,8 +116,27 @@ let init = function(){
     
     }
 
-
     scene.add(storyboard);
+
+    let addingBoard = document.getElementById("addingStoryboard");
+    addingBoard.addEventListener("click", addStoryboard, false);
+
+    function addStoryboard(){
+        board = new THREE.Mesh(boardGeometry, boardMaterial);
+        board_child = new THREE.Mesh(boardGeometry_child, boardMaterial_child);
+        board_wall = new THREE.Mesh(boardGeometry_wall, boardMaterial);
+
+        board.position.x = 50;
+
+        storyboard.add(board);
+        board.add(board_child);
+
+        board_wall.position.y = 7;
+        board_wall.position.z = -10;
+
+        board.add(board_wall);
+
+    }
     // -------------------------------------- end of creating the storyboard
                    
     // --- add the Orbit Control, it rotates the camera and enforces the camera up direction--- // 
@@ -129,10 +148,6 @@ let init = function(){
     let pmremGenerator = new THREE.PMREMGenerator( renderer );
     pmremGenerator.compileEquirectangularShader();
 
-    
-    
-
-
     // --- Drag function --- //
     dragControl();
 
@@ -143,6 +158,9 @@ let init = function(){
     window.addEventListener('mouseout', () => pickPosition.reset());
     window.addEventListener('mouseleave', () => pickPosition.reset());
 
+
+    //drag background to the wall of the board
+   // setupDragDrop();
 
 };
 // ----------------------------------------------------------------------------
@@ -168,7 +186,6 @@ let init = function(){
 // ----------------------------------------------------------------------------
 //  OnClick Function - adding gltf-objects by clicking on the menu
 // ----------------------------------------------------------------------------
-
     let addingMan = document.getElementById("man");
     addingMan.addEventListener("click", addMan, false);
 
@@ -321,6 +338,45 @@ function dragControl(){
 //  End of DragControl Function
 // ----------------------------------------------------------------------------
 
+/*function setupDragDrop(){
+    let holder = document.getElementById('holder');
+
+    if (typeof window.FileReader === 'undefined') {
+        console.error("Filereader not supported");
+    }
+
+    holder.ondragover = function () {
+        this.className = 'hover';
+        return false;
+    };
+    holder.ondragend = function () {
+        this.className = '';
+        return false;
+    };
+
+    holder.ondrop = function (e) {
+        this.className = '';
+        e.preventDefault();
+
+        var file = e.dataTransfer.files[0],
+                reader = new FileReader();
+        reader.onload = function (event) {
+            console.log(event.target);
+            console.log(event);
+            holder.style.background = 'url(' + event.target.result + ') no-repeat center';
+
+            var image = document.createElement('img');
+            image.src = event.target.result;
+            var texture = new THREE.Texture(image);
+            texture.needsUpdate = true;
+
+            scene.getObjectByName('cube').material.map = texture;
+        };
+        reader.readAsDataURL(file);
+
+        return false;
+    }
+}*/
 
 // ----------------------------------------------------------------------------
 //  Resize Function - reports the window size each time it is resized

@@ -89,3 +89,10 @@ body{
     margin-bottom: 3px;
     color: white;
 }
+
+#holder{
+    border: 10px dashed red;
+    width: 150px;
+    height: 150px;
+    margin: 20px auto;
+}
