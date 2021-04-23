@@ -43,7 +43,7 @@ body{
     display:none;
     position: absolute;
     left: 0;
-    background-color:grey;
+    background-color:#c6c2c2;
     width: 100%;
     z-index: 1;
 }

@@ -10,6 +10,8 @@ import { Picker, PickPosition } from './picker.js';
 // ----------------------------------------------------------------------------
 //  global variables 
 // ----------------------------------------------------------------------------
+let container;
+
 let scene, camera, renderer, light, controls;
 
 let objects = [];
@@ -44,6 +46,8 @@ const pickPosition = new PickPosition();
 //  Init Function - initialize the project
 // ----------------------------------------------------------------------------
 let init = function(){
+    
+    container = document.getElementById('container');   
 
     // --- create the scene --- //
     scene = new THREE.Scene();
@@ -66,22 +70,23 @@ let init = function(){
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.outputEncoding = THREE.sRGBEncoding; //configure textures referenced from .glb
     // --- to be able to locate on the browser --- //
-    document.body.appendChild(renderer.domElement);
+    //document.body.appendChild(renderer.domElement);
+    container.appendChild(renderer.domElement);
 
    
     // --- create the floor --- // 
-    const floorGometry = new THREE.PlaneGeometry( 400, 80 );
+    /*const floorGometry = new THREE.PlaneGeometry( 400, 80 );
     const floorMaterial = new THREE.MeshBasicMaterial( {color: 0xaaaaaa} );
     const floor = new THREE.Mesh( floorGometry, floorMaterial );
     floor.rotation.x = - Math.PI / 2;
-    scene.add( floor );
+    scene.add( floor );*/
 
-    /*const grid = new THREE.GridHelper(1000, 200);
+    const grid = new THREE.GridHelper(1000, 200);
     grid.material.opacity = 0.2;
     grid.color = 0xeeeeee;
     grid.material.depthWrite = false; // avoid z-fighting
     grid.material.transparent = true;
-    scene.add( grid );*/
+    scene.add( grid );
 
     // --- create the storyboard with different squares--- //
     const boardGeometry = new THREE.BoxGeometry(20, 0.9, 20);
@@ -98,7 +103,7 @@ let init = function(){
         board_child = new THREE.Mesh(boardGeometry_child, boardMaterial_child);
         board_wall = new THREE.Mesh(boardGeometry_wall, boardMaterial);
 
-        board.position.x = x * 50;
+        //board.position.x = x * 50;
 
         storyboard.add(board);
         board.add(board_child);
@@ -107,7 +112,6 @@ let init = function(){
         board_wall.position.z = -10;
 
         board.add(board_wall);
-
         
        /* // --- create the css Element for the Text --//
         cssElement = createCSS3DObject(text);
@@ -121,12 +125,15 @@ let init = function(){
     let addingBoard = document.getElementById("addingStoryboard");
     addingBoard.addEventListener("click", addStoryboard, false);
 
+    let pos = 50;
+
     function addStoryboard(){
         board = new THREE.Mesh(boardGeometry, boardMaterial);
         board_child = new THREE.Mesh(boardGeometry_child, boardMaterial_child);
         board_wall = new THREE.Mesh(boardGeometry_wall, boardMaterial);
-
-        board.position.x = 50;
+               
+        board.position.x = pos;
+        pos += 50;
 
         storyboard.add(board);
         board.add(board_child);
