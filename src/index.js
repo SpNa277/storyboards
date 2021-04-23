@@ -5,12 +5,14 @@ import { DragControls } from '../node_modules/three/examples/jsm/controls/DragCo
 import { TransformControls } from '../node_modules/three/examples/jsm/controls/TransformControls.js'
 import { CSS3DRenderer } from '/node_modules/three/examples/jsm/renderers/CSS3DRenderer.js'
 import { Picker, PickPosition } from './picker.js';
+import Stats from '../node_modules/three/examples/jsm/libs/stats.module.js';
 
 
 // ----------------------------------------------------------------------------
 //  global variables 
 // ----------------------------------------------------------------------------
 let container;
+let stats;
 
 let scene, camera, renderer, light, controls;
 
@@ -48,6 +50,8 @@ const pickPosition = new PickPosition();
 let init = function(){
     
     container = document.getElementById('container');   
+    stats = new Stats();
+    document.body.appendChild(stats.domElement);
 
     // --- create the scene --- //
     scene = new THREE.Scene();
@@ -97,7 +101,7 @@ let init = function(){
 
     storyboard = new THREE.Group();
 
-    for (let x = 0; x < 1; x++) {
+    //for (let x = 0; x < 1; x++) {
             
         board = new THREE.Mesh(boardGeometry, boardMaterial);
         board_child = new THREE.Mesh(boardGeometry_child, boardMaterial_child);
@@ -113,12 +117,13 @@ let init = function(){
 
         board.add(board_wall);
         
-       /* // --- create the css Element for the Text --//
-        cssElement = createCSS3DObject(text);
+      /* // --- create the css Element for the Text --//
+        renderer2 = new THREE.CSS3DRenderer();
+       cssElement = createCSS3DObject(text);
         cssElement.position.set(5,5,5);
         board_wall.add(cssElement);*/
     
-    }
+    //}
 
     scene.add(storyboard);
 
@@ -427,9 +432,10 @@ function onKeyDown(e){
 // ----------------------------------------------------------------------------
 function render() {
     controls.update();
+    stats.update();
     renderer.render( scene, camera );
     picker.pick(pickPosition, camera, objects);
-   requestAnimationFrame(render);
+    requestAnimationFrame(render);
 }
 // ----------------------------------------------------------------------------
 //  End of Render Function
