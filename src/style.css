@@ -90,6 +90,13 @@ body{
     color: white;
 }
 
+#moveObjects{
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    color: black;
+}
+
 #holder{
     border: 10px dashed red;
     width: 150px;

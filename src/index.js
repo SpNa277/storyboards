@@ -31,6 +31,9 @@ let ADD;
 let string = '<div>' + '<h1>Scene</h1>' + '</div>';
 let cssScene;
 
+let transform;
+let dragControls;
+
 
 // ----------------------------------------------------------------------------
 // end of global variables
@@ -63,10 +66,12 @@ let init = function(){
     // --- create and locate the camera --- //
     camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 1000);
     camera.position.set(0, 7, 20);
-    camera.lookAt(scene.position);
+    camera.lookAt(scene.position);   
 
     // --- create the light --- //
     light = new THREE.AmbientLight(0xffffff);
+    //light = new THREE.DirectionalLight(0xffffff, 2);
+    //light.position.set(1,1,1);
     scene.add(light);
     
 
@@ -227,13 +232,50 @@ let init = function(){
     //controls = new OrbitControls(camera, labelRenderer.domElement);
     controls.target.set(0,1.6, 0);
     controls.update();
+    //controls.addEventListener('change', render);
+
+    transform = new TransformControls(camera, renderer.domElement);
+    /*transform.addEventListener('dragging-changed', function(event){
+        controls.enabled =! event.value;
+    });*/
+    transform.addEventListener('mouseDown', function(event){
+        controls.enabled = false;
+    });
+    transform.addEventListener('mouseUp', function(event){
+        controls.enabled = true;
+    });
+
+    scene.add(transform);
+
+    window.addEventListener('keydown', function(event){
+        switch(event.key){
+            case "g":
+                transform.setMode("translate");
+                break;  
+            case "r":
+                transform.setMode("rotate");
+                break;
+            case "s":
+                transform.setMode("scale");
+                break;
+        }
+    })
+
+
+    /*if(picker > 0){
+        transform.attach(objects);
+        scene.add(transform);
+    }else{
+        transform.detach();
+        scene.remove(transform);
+    }*/
 
     // --- generates a prefiltered, midmapped radiance environment MAP --- //
     let pmremGenerator = new THREE.PMREMGenerator( renderer );
     pmremGenerator.compileEquirectangularShader();
 
     // --- Drag function --- //
-    dragControl();
+    //dragControl();
 
     //
     document.addEventListener("keydown", onKeyDown, false);
@@ -241,7 +283,6 @@ let init = function(){
     window.addEventListener('click', (event) => pickPosition.setPosition(event, renderer.domElement));
     window.addEventListener('mouseout', () => pickPosition.reset());
     window.addEventListener('mouseleave', () => pickPosition.reset());
-
 
     //drag background to the wall of the board
    //setupDragDrop();
@@ -275,7 +316,16 @@ let init = function(){
             console.log(figure);
             figure.position.set(-20,2,2);
             scene.add(figure);
-            objects.push(figure);                         
+            objects.push(figure);
+            transform.attach(figure);
+            
+            /*if (picker.pick > 0){
+                transform.attach(figure);
+                scene.add(transform);
+            }else{
+                transform.detach();
+                scene.remove(transform);
+            }*/
         },
         function(xhr){
             console.log((xhr.loaded / xhr.total*100)+ '% loaded');
@@ -295,7 +345,8 @@ let init = function(){
             console.log(figure);
             figure.position.set(-18,2,2);
             scene.add(figure); 
-            objects.push(figure);                               
+            objects.push(figure);
+            //transform.attach(figure);                               
         },
         function(xhr){
             console.log((xhr.loaded / xhr.total*100)+ '% loaded');
@@ -314,7 +365,8 @@ let init = function(){
             console.log(figure);
             figure.position.set(-15,2,2);
             scene.add(figure); 
-            objects.push(figure);                                
+            objects.push(figure);
+            //transform.attach(figure);                                
         },
         function(xhr){
             console.log((xhr.loaded / xhr.total*100)+ '% loaded');
@@ -334,7 +386,8 @@ let init = function(){
             console.log(figure);
             figure.position.set(-12,2,2);
             scene.add(figure); 
-            objects.push(figure);                                
+            objects.push(figure);
+            //transform.attach(figure);                                
         },
         function(xhr){
             console.log((xhr.loaded / xhr.total*100)+ '% loaded');
@@ -354,7 +407,8 @@ let init = function(){
             console.log(figure);
             figure.position.set(-10,2,2);
             scene.add(figure);
-            objects.push(figure);                                
+            objects.push(figure);
+            //transform.attach(figure);                                
         },
         function(xhr){
             console.log((xhr.loaded / xhr.total*100)+ '% loaded');
@@ -374,7 +428,8 @@ let init = function(){
             console.log(figure);
             figure.position.set(-8,2,2);
             scene.add(figure);  
-            objects.push(figure);                                
+            objects.push(figure);
+            //transform.attach(figure);                                
         },
         function(xhr){
             console.log((xhr.loaded / xhr.total*100)+ '% loaded');
@@ -395,8 +450,8 @@ let init = function(){
 //  DragControl Function - drag and drop the gltf-objects around the scene
 // ----------------------------------------------------------------------------
 function dragControl(){
-    let dragControls = new DragControls(objects, camera, renderer.domElement);
-  
+    dragControls = new DragControls(objects, camera, renderer.domElement);
+    
     dragControls.addEventListener('dragstart', function(event){
         controls.enabled = false;
        //event.object.material.emissive.set( 0x666666 );
@@ -408,7 +463,7 @@ function dragControl(){
     });
     dragControls.addEventListener('drag', function(event){
         event.object.material.emissive.set( 0x666666 );
-        event.object.position.y = 0;
+        //event.object.position.y = 0;
     });
 
 }
@@ -501,7 +556,7 @@ function onKeyDown(e){
 function render() {
     controls.update();
     stats.update();
-    renderer.render(scene, camera );
+    renderer.render(scene, camera);
    //labelRenderer.render(cssScene, camera);
     picker.pick(pickPosition, camera, objects);
     requestAnimationFrame(render);
