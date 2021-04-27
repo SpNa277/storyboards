@@ -3,18 +3,20 @@ import { GLTFLoader } from '../node_modules/three/examples/jsm/loaders/GLTFLoade
 import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js';
 import { DragControls } from '../node_modules/three/examples/jsm/controls/DragControls.js';
 import { TransformControls } from '../node_modules/three/examples/jsm/controls/TransformControls.js'
-import { CSS3DRenderer } from '/node_modules/three/examples/jsm/renderers/CSS3DRenderer.js'
+import { CSS3DRenderer, CSS3DObject } from '/node_modules/three/examples/jsm/renderers/CSS3DRenderer.js'
 import { Picker, PickPosition } from './picker.js';
 import Stats from '../node_modules/three/examples/jsm/libs/stats.module.js';
+import { CSS2DRenderer, CSS2DObject } from '/node_modules/three/examples/jsm/renderers/CSS2DRenderer.js'
 
 
 // ----------------------------------------------------------------------------
 //  global variables 
 // ----------------------------------------------------------------------------
 let container;
-let stats;
+
 
 let scene, camera, renderer, light, controls;
+let labelRenderer;
 
 let objects = [];
 
@@ -26,8 +28,9 @@ let ADD;
 //let raycaster = new THREE.Raycaster();
 //let mouse = new THREE.Vector2();
 
-let text = '<div>' + '<h1>Scene 1</h1>' + '</div>';
-let cssElement;
+let string = '<div>' + '<h1>Scene</h1>' + '</div>';
+let cssScene;
+
 
 // ----------------------------------------------------------------------------
 // end of global variables
@@ -40,8 +43,10 @@ window.requestAnimationFrame(render);
 const picker = new Picker();
 const pickPosition = new PickPosition();
 
+// --- added the stats panel --- //
+let stats = new Stats();
+document.body.appendChild(stats.domElement);
 
-   
 
 
 // ----------------------------------------------------------------------------
@@ -50,8 +55,6 @@ const pickPosition = new PickPosition();
 let init = function(){
     
     container = document.getElementById('container');   
-    stats = new Stats();
-    document.body.appendChild(stats.domElement);
 
     // --- create the scene --- //
     scene = new THREE.Scene();
@@ -60,6 +63,7 @@ let init = function(){
     // --- create and locate the camera --- //
     camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 1000);
     camera.position.set(0, 7, 20);
+    camera.lookAt(scene.position);
 
     // --- create the light --- //
     light = new THREE.AmbientLight(0xffffff);
@@ -68,7 +72,7 @@ let init = function(){
 
     // --- create the renderer --- //
     renderer = new THREE.WebGLRenderer({antialias: true});
-    renderer.setClearColor(0x000000, 1.0);
+    renderer.setClearColor(0x000000, 0.0);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -77,6 +81,19 @@ let init = function(){
     //document.body.appendChild(renderer.domElement);
     container.appendChild(renderer.domElement);
 
+    /*labelRenderer = new CSS2DRenderer();
+    labelRenderer.setSize(window.innerWidth, window.innerHeight);
+    labelRenderer.domElement.style.position = 'fixed';
+    labelRenderer.domElement.style.top = '0px';
+    document.body.appendChild(labelRenderer.domElement);*/
+
+    /*labelRenderer = new CSS3DRenderer();
+    labelRenderer.setSize(window.innerWidth, window.innerHeight);
+    labelRenderer.domElement.style.position = 'absolute';
+    labelRenderer.domElement.style.top = '0px';
+    //renderer.domElement.appendChild(labelRenderer.domElement);
+    //document.body.appendChild(labelRenderer.domElement);
+    container.appendChild(labelRenderer.domElement);*/
    
     // --- create the floor --- // 
     /*const floorGometry = new THREE.PlaneGeometry( 400, 80 );
@@ -103,26 +120,20 @@ let init = function(){
 
     //for (let x = 0; x < 1; x++) {
             
-        board = new THREE.Mesh(boardGeometry, boardMaterial);
-        board_child = new THREE.Mesh(boardGeometry_child, boardMaterial_child);
-        board_wall = new THREE.Mesh(boardGeometry_wall, boardMaterial);
+    board = new THREE.Mesh(boardGeometry, boardMaterial);
+    board_child = new THREE.Mesh(boardGeometry_child, boardMaterial_child);
+    board_wall = new THREE.Mesh(boardGeometry_wall, boardMaterial);
 
-        //board.position.x = x * 50;
+    //board.position.x = x * 50;
 
-        storyboard.add(board);
-        board.add(board_child);
+    storyboard.add(board);
+    board.add(board_child);
 
-        board_wall.position.y = 7;
-        board_wall.position.z = -10;
+    board_wall.position.y = 7;
+    board_wall.position.z = -10;
 
-        board.add(board_wall);
-        
-      /* // --- create the css Element for the Text --//
-        renderer2 = new THREE.CSS3DRenderer();
-       cssElement = createCSS3DObject(text);
-        cssElement.position.set(5,5,5);
-        board_wall.add(cssElement);*/
-    
+    board.add(board_wall);
+   
     //}
 
     scene.add(storyboard);
@@ -149,10 +160,71 @@ let init = function(){
         board.add(board_wall);
 
     }
+
+    /*let boardDiv = new THREE.Object3D();
+    //boardDiv = document.getElementById("info");
+    boardDiv.appendChild(document.createTextNode('Scene'));
+    board_wall.add(boardDiv);*/
+
+    //const boardDiv = createCSS3DObject(string);
+    //boardDiv.position.set(1,1,1);
+    //scene.add(boardDiv);
+    //console.log(boardDiv);
+
+    /*cssScene = new THREE.Scene();
+    let element = document.createElement('div');
+    element.innerHTML = 'Scene';
+    element.style.background = "#0094ff";
+    element.style.color = "white";
+    element.style.padding = "2px";
+    element.style.border = "0px";
+    element.style.margin = "0px";
+    let div = new CSS3DObject(element);
+   //div.position.x = 0;
+    //div.position.y = 0;
+   // div.position.z = 0;
+    board_wall.add(div);
+    const fontLoader = new THREE.FontLoader();
+    const font = loader.load('fonts/helvetiker_bold.typeface.json', function(font){
+        scene.add(font);
+    })
+
+    var textScene = document.createElement('div');
+    container.appendChild(textScene);
+    textScene.className = 'infoText';
+    textScene.textContent = "Scene";
+    console.log(textScene);
+    
+    scene.add(textScene);*/
+
+    /*const boardDiv = document.createElement('div');
+    boardDiv.className = 'label';
+    boardDiv.textContent = 'Scene';
+    boardDiv.style.marginTop = '-1em';
+    const boardLabel = new CSS2DObject(boardDiv);
+    board_wall.add(boardLabel);*/
+
+    
+        /*var textGeo = new THREE.TextGeometry();
+        textGeo.computeBoundingBox();
+        textGeo.computeVertexNormals();
+
+        var material = new THREE.MeshFaceMaterial([
+            new THREE.MeshPhongMaterial({color: 0xff22cc, shading: THREE.FlatShading}), // front
+            new THREE.MeshPhongMaterial({color: 0xff22cc, shading: THREE.SmoothShading}) // side
+        ]);
+
+        var textMesh = new THREE.Mesh(textGeo, material);
+        textMesh.position.x = -textGeo.boundingBox.max.x / 2;
+        textMesh.position.y = -200;
+        textMesh.name = 'text';
+        scene.add(textMesh);*/    
+
     // -------------------------------------- end of creating the storyboard
                    
     // --- add the Orbit Control, it rotates the camera and enforces the camera up direction--- // 
     controls = new OrbitControls(camera, renderer.domElement);
+    //controls = new OrbitControls(camera, labelRenderer.domElement);
     controls.target.set(0,1.6, 0);
     controls.update();
 
@@ -172,29 +244,23 @@ let init = function(){
 
 
     //drag background to the wall of the board
-   // setupDragDrop();
+   //setupDragDrop();
 
 };
 // ----------------------------------------------------------------------------
 //  End of Init Function
 // ----------------------------------------------------------------------------
 
-/*function createCSS3DObject(s) {
-    // convert the string to dome elements
-    var wrapper = document.createElement('div');
-    wrapper.innerHTML = s;
-    var div = wrapper.firstChild;
+/*function createCSS3DObject(s){
+    let element = document.createElement('div');
+    element.innerHTML = s;
+    let div = element.firstChild;
+  
+    let objectText = new CSS3DObject(div);
+    return objectText;
 
-    // set some values on the div to style it, standard CSS
-    div.style.width = '370px';
-    div.style.height = '370px';
-    div.style.opacity = 0.7;
-    div.style.background = new THREE.Color(Math.random() * 0xffffff).getStyle();
-
-    // create a CSS3Dobject and return it.
-    var object = new THREE.CSS3DObject(div);
-    return object;
 }*/
+
 // ----------------------------------------------------------------------------
 //  OnClick Function - adding gltf-objects by clicking on the menu
 // ----------------------------------------------------------------------------
@@ -353,6 +419,7 @@ function dragControl(){
 /*function setupDragDrop(){
     let holder = document.getElementById('holder');
 
+
     if (typeof window.FileReader === 'undefined') {
         console.error("Filereader not supported");
     }
@@ -379,10 +446,10 @@ function dragControl(){
 
             var image = document.createElement('img');
             image.src = event.target.result;
-            var texture = new THREE.Texture(image);
-            texture.needsUpdate = true;
+            //var texture = new THREE.Texture(image);
+            //texture.needsUpdate = true;
 
-            scene.getObjectByName('cube').material.map = texture;
+            //scene.getObjectByName('cube').material.map = texture;
         };
         reader.readAsDataURL(file);
 
@@ -401,6 +468,7 @@ function onWindowResize(){
     camera.updateProjectionMatrix();
 
     renderer.setSize(window.innerWidth, window.innerHeight);
+    //labelRenderer.setSize(window.innerWidth, window.innerHeight);
 }
 // ----------------------------------------------------------------------------
 //  End of Resize Function
@@ -433,7 +501,8 @@ function onKeyDown(e){
 function render() {
     controls.update();
     stats.update();
-    renderer.render( scene, camera );
+    renderer.render(scene, camera );
+   //labelRenderer.render(cssScene, camera);
     picker.pick(pickPosition, camera, objects);
     requestAnimationFrame(render);
 }

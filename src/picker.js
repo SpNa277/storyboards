@@ -27,6 +27,7 @@ export class Picker {
       //this.pickedObjectSavedColor = this.pickedObject.material.emissive.getHex();
       // set its emissive color 
       this.pickedObject.material.emissive.set(0x901e1e);
+      console.log(this.pickedObject.position);
     }
   }
 }

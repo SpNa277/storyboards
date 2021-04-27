@@ -96,3 +96,25 @@ body{
     height: 150px;
     margin: 20px auto;
 }
+
+#holder.hover{
+    border: 10px dashed #333;
+}
+
+
+.label{
+    color: #fff;
+    font-family: sans-serif;
+    padding: 2px;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+#infoText{
+    position: absolute;
+    top: 10px;
+    width: 100%;
+    text-align: center;
+    z-index: 100;
+    display: block;
+    color: black;
+}
