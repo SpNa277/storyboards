@@ -17,7 +17,7 @@
         <div class="subnav">
             <button class="subnavbtn">Character</button>
             <div class="subnav-content">
-                <a id="man" href="#"><img class="img1" src="img/man.png" alt="man"><span style="display: block">Man</span></img></a>
+                <a id="man" id="draggable" href="#"><img class="img1" src="img/man.png" alt="man"><span style="display: block">Man</span></img></a>
                 <a id="woman" href="#"><img class="img1" src="img/woman.png" alt="woman"><span style="display: block">Woman</span></img></a>
             </div>
         </div> 
@@ -51,19 +51,29 @@
         </div>
         
         <div id="container"></div>
-        <!--<div id="holder"></div>-->
+        <div id="holder" style="visibility: hidden" ></div>
+        <div id="tooltip" style="visibility: hidden; position: absolute; color: white; font-family: sans-serif"></div>
 
         <!-- Start container for the object properties  -->
-        <fieldset id="properties">
-            <legend>Object Properties</legend>
-            <div class="control" id="name">Name: </div>
-            <div class="control" id="x-axis">X-Axis: </div>
-            <div class="control" id="y-axis">Y-Axis: </div>
-            <div class="control" id="z-axis">Z-Axis: </div>
-            <div class="control">Width: </div>
-            <div class="control">Height: </div>
-            <div class="control">Depth: </div>
-        </fieldset>
+        <div id="properties" style="visibility: hidden">
+            <h3>Object Properties</h3>
+            <table class="propertiesTable" style="min-width: 290px;">
+                <tr>
+                    <td>Name:</td>
+                    <td><input id="name" type="string" /></td>
+                </tr>
+                <tr>
+                    <td>X-Axis:</td>
+                    <td><input id="x-axis" type="number" value="0" step="0.5" /></td>
+                </tr>
+                <tr>
+                    <td>Y-Axis:</td>
+                    <td><input id="y-axis" type="number" value="0" step="0.5" /></td>
+                </tr>
+            </table>
+        </div>
+
+        <!--<input type="text" id="levelHeightProp" style="width: 100px; border: 1px solid rgb(42, 42, 42); font-size: 14px; color: white; font-family: &quot;Courier New&quot;, Courier, monospace; background-color: rgb(78, 78, 78);" class="editable" onchange="validatePlusOrMinusNumber(this, updateLevelHeight);" maxlength="8">-->
 
         <!--Information about which key to press to move the SAP Scene objects-->
         <div id="moveObjects">"G" to move | "R" to rotate | "S" to scale </div>

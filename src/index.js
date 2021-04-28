@@ -25,14 +25,15 @@ let board, board_child, board_wall, storyboard;
 const LEFT = 37, RIGHT = 39, UP = 38, DOWN = 40;
 let ADD;
 
-//let raycaster = new THREE.Raycaster();
-//let mouse = new THREE.Vector2();
+let raycaster = new THREE.Raycaster();
+let mouse = new THREE.Vector2();
 
 let string = '<div>' + '<h1>Scene</h1>' + '</div>';
 let cssScene;
 
 let transform;
 let dragControls;
+
 
 
 // ----------------------------------------------------------------------------
@@ -261,7 +262,6 @@ let init = function(){
         }
     })
 
-
     /*if(picker > 0){
         transform.attach(objects);
         scene.add(transform);
@@ -280,7 +280,11 @@ let init = function(){
     //
     document.addEventListener("keydown", onKeyDown, false);
 
-    window.addEventListener('click', (event) => pickPosition.setPosition(event, renderer.domElement));
+    window.addEventListener('click', (event) => {
+        console.log("coucou", event);
+        console.log("Salut", picker.pickedObject);
+        pickPosition.setPosition(event, renderer.domElement);
+    });
     window.addEventListener('mouseout', () => pickPosition.reset());
     window.addEventListener('mouseleave', () => pickPosition.reset());
 
@@ -302,13 +306,58 @@ let init = function(){
 
 }*/
 
-// ----------------------------------------------------------------------------
+// ---------------------------------------------------------------------------- 
 //  OnClick Function - adding gltf-objects by clicking on the menu
 // ----------------------------------------------------------------------------
     let addingMan = document.getElementById("man");
     addingMan.addEventListener("click", addMan, false);
+    //let x = event.offsetX;
+    //addingMan.addEventListener("dragstart", addMan, false);
+    //addingMan.addEventListener("drag", function(){ }, false);
+    /*addingMan.addEventListener("drop", event =>{
+        mouse.x = event.clientX / window.innerWidth * 2-1;
+        mouse.y = event.clientY / window.innerHeight * 2+1;
+        raycaster.setFromCamera(mouse, camera);
+        //camera.position.x = mouse.x;
+        //camera.position.y = mouse.y;
+    }, false);*/
+
+    /*addingMan.addEventListener("drop", (event) =>{
+        event.screenX;
+        event.screenY;
+    });*/
+
+    //based on https://htmldom.dev/make-a-draggable-element/
+    /*let x = 0;
+    let y = 0;
+
+    const mouseDownHandler = function(e){
+        x = e.clientX;
+        y = e.clientY;
+
+        document.addEventListener('mousemove', mouseMoveHandler);
+        //
+        document.addEventListener('mousedown', addMan, false);
+    };
+
+    const mouseMoveHandler = function(e){
+        const dx = e.clientX - x;
+        const dy = e.clientY - y;
+        addingMan.style.top = `${addingMan.offsetTop + dy}px`; 
+        addingMan.style.let = `${addingMan.offsetLeft + dx}px`;
+
+        x = e.clientX;
+        y = e.clientY;
+    };
+
+    const mouseUpHandler = function(){
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        document.removeEventListener('mouseup', mouseUpHandler);
+    };
+    addingMan.addEventListener('mousedown', mouseDownHandler);*/    
 
     function addMan(){
+        console.log("man");
         let loader = new GLTFLoader();
         loader.load("../src/img/man.glb", function(gltf){ 
             let figure = gltf.scene;
@@ -317,15 +366,7 @@ let init = function(){
             figure.position.set(-20,2,2);
             scene.add(figure);
             objects.push(figure);
-            transform.attach(figure);
-            
-            /*if (picker.pick > 0){
-                transform.attach(figure);
-                scene.add(transform);
-            }else{
-                transform.detach();
-                scene.remove(transform);
-            }*/
+            //transform.attach(figure);
         },
         function(xhr){
             console.log((xhr.loaded / xhr.total*100)+ '% loaded');
@@ -534,13 +575,13 @@ function onWindowResize(){
 // ----------------------------------------------------------------------------
 function onKeyDown(e){
     if(e.keyCode == LEFT)
-        scene.position.x += 0.2;
+        scene.position.x += 2;
     else if(e.keyCode == RIGHT)
-        scene.position.x -= 0.2;
+        scene.position.x -= 2;
     else if(e.keyCode == UP)
-        scene.position.z += 0.2;
+        scene.position.z += 2;
     else if(e.keyCode == DOWN)
-        scene.position.z -= 0.2;
+        scene.position.z -= 2;
     else
         return;
 }
