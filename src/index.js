@@ -244,7 +244,7 @@ let init = function(){
     window.addEventListener('mouseleave', () => pickPosition.reset());
 
     //drag background to the wall of the board
-    setupDragDrop();
+    //setupDragDrop();
 
     // --- Drag function --- //
     //dragControl();
