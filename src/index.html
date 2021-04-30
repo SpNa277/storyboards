@@ -17,7 +17,7 @@
         <div class="subnav">
             <button class="subnavbtn">Character</button>
             <div class="subnav-content">
-                <a id="man" href="#"><img class="img1" src="img/man.png" alt="man"><span style="display: block">Man</span></img></a>
+                <a id="man" id="draggable" href="#"><img class="img1" src="img/man.png" alt="man"><span style="display: block">Man</span></img></a>
                 <a id="woman" href="#"><img class="img1" src="img/woman.png" alt="woman"><span style="display: block">Woman</span></img></a>
             </div>
         </div> 
@@ -50,23 +50,35 @@
         </div>
         </div>
         
-        <div id="container"></div>
-        <!--<div id="holder"></div>-->
+        <div id="container">
+            <div id="labels" style="visibility: hidden; position: absolute"></div>
+            <div id="holder" style="visibility: hidden; position: absolute" ></div>
+            <div id="moveObjects">"G" to move | "R" to rotate | "S" to scale </div> <!--Information about which key to press to move the SAP Scene objects-->
+        </div>
+        
 
-        <!-- Start container for the object properties  -->
-        <fieldset id="properties">
-            <legend>Object Properties</legend>
-            <div class="control" id="name">Name: </div>
-            <div class="control" id="x-axis">X-Axis: </div>
-            <div class="control" id="y-axis">Y-Axis: </div>
-            <div class="control" id="z-axis">Z-Axis: </div>
-            <div class="control">Width: </div>
-            <div class="control">Height: </div>
-            <div class="control">Depth: </div>
-        </fieldset>
+        <!-- Start table for the object properties  -->
+        <div id="properties" style="visibility: hidden">
+            <h3>Object Properties</h3>
+            <table class="propertiesTable" style="min-width: 290px;">
+                <tr>
+                    <td>Name:</td>
+                    <td><input id="name" type="string" /></td>
+                </tr>
+                <tr>
+                    <td>X:</td>
+                    <td><input id="x" type="number" step="0.5" /> cm</td>
+                </tr>
+                <tr>
+                    <td>Y:</td>
+                    <td><input id="y" type="number" step="0.5" /> cm</td>
+                </tr>
+            </table>
+        </div>
 
-        <!--Information about which key to press to move the SAP Scene objects-->
-        <div id="moveObjects">"G" to move | "R" to rotate | "S" to scale </div>
+    
+
+        
 
         <!-- that the dropdown stayes-->
         <!--based on idea: https://stackoverflow.com/questions/41545067/how-to-change-hover-menu-to-clickable-menu-->

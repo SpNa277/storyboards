@@ -15,7 +15,8 @@ export class Picker {
       this.pickedObject.material.emissive.set(0x000000);
       this.pickedObject = undefined;
     }
-
+    
+    //let propertyTable = document.getElementById("properties");
     // cast a ray through the frustum
     this.raycaster.setFromCamera(normalizedPosition, camera);
     // get the list of objects the ray intersected
@@ -27,12 +28,14 @@ export class Picker {
       //this.pickedObjectSavedColor = this.pickedObject.material.emissive.getHex();
       // set its emissive color 
       this.pickedObject.material.emissive.set(0x901e1e);
-      //console.log(this.pickedObject.position);
-    }
+      //propertyTable.style.visibility = 'visible';
+    }/*else{
+      propertyTable.style.visibility = 'hidden';
+    }*/
   }
 }
   
-//to track where the mouse is
+//to track the position of the mouse
 export class PickPosition {
   constructor() {
     this.x = undefined;
