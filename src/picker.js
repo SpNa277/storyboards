@@ -38,19 +38,22 @@ export class Picker {
 //to track the position of the mouse
 export class PickPosition {
   constructor() {
-    this.x = undefined;
-    this.y = undefined;
+    this.reset();
   }
 
   reset() {
     this.x = undefined;
     this.y = undefined;
+    this.absX = undefined;
+    this.absY = undefined;
   }
 
   setPosition(event, domElement) {
     const pos = getCanvasRelativePosition(event, domElement);
     this.x = (pos.x / domElement.width) * 2 - 1;
     this.y = (pos.y / domElement.height) * -2 + 1; // note we flip Y
+    this.absX = pos.x;
+    this.absY = pos.y;
   }
 }
 
@@ -60,4 +63,17 @@ function getCanvasRelativePosition(event, domElement) {
     x: ((event.clientX - rect.left) * domElement.width) / rect.width,
     y: ((event.clientY - rect.top) * domElement.height) / rect.height,
   };  
+}
+
+export function intersectionPosition(normalizedPosition, camera, objects){
+  const raycaster = new THREE.Raycaster();
+
+  raycaster.setFromCamera(normalizedPosition, camera);
+    // get the list of objects the ray intersected
+    const intersectedObjects = raycaster.intersectObjects(objects, true);
+    if (intersectedObjects.length) {
+      return intersectedObjects[0].point;
+    }
+
+    return undefined;
 }

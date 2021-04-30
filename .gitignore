@@ -128,3 +128,4 @@ tmp/
 temp/
 
 # End of https://www.toptal.com/developers/gitignore/api/node
+THREE.Multiplayer

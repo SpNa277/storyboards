@@ -4,21 +4,22 @@ import { OrbitControls } from '../node_modules/three/examples/jsm/controls/Orbit
 import { DragControls } from '../node_modules/three/examples/jsm/controls/DragControls.js';
 import { TransformControls } from '../node_modules/three/examples/jsm/controls/TransformControls.js'
 import { CSS3DRenderer, CSS3DObject } from '/node_modules/three/examples/jsm/renderers/CSS3DRenderer.js'
-import { Picker, PickPosition } from './picker.js';
+import { Picker, PickPosition, intersectionPosition } from './picker.js';
 import Stats from '../node_modules/three/examples/jsm/libs/stats.module.js';
 import { CSS2DRenderer, CSS2DObject } from '/node_modules/three/examples/jsm/renderers/CSS2DRenderer.js'
+import { FIGURES } from './figure.js';
 
 
 // ----------------------------------------------------------------------------
 //  global variables 
 // ----------------------------------------------------------------------------
-let container;
 
 
 let scene, camera, renderer, light, controls;
 let labelRenderer;
 
-let objects = [];
+const objects = [];
+const storyboards = [];
 
 let board, board_child, board_wall, storyboard;
 
@@ -37,13 +38,17 @@ let dragControls;
 
 window.requestAnimationFrame(render);
 
+const container = document.getElementById('container');   
   
 const picker = new Picker();
 const pickPosition = new PickPosition();
 
+const dropPosition = new PickPosition();
+
 // --- added the stats panel --- //
 let stats = new Stats();
 document.body.appendChild(stats.domElement);
+
 
 // ----------------------------------------------------------------------------
 // end of global variables
@@ -55,7 +60,7 @@ document.body.appendChild(stats.domElement);
 // ----------------------------------------------------------------------------
 let init = function(){
     
-    container = document.getElementById('container');   
+    
 
     // --- create the scene --- //
     scene = new THREE.Scene();
@@ -189,12 +194,6 @@ let init = function(){
     transform.addEventListener('dragging-changed', function(event){
         controls.enabled =! event.value;
     });
-    /*transform.addEventListener('mouseDown', function(event){
-        controls.enabled = false;
-    });
-    transform.addEventListener('mouseUp', function(event){
-        controls.enabled = true;
-    });*/
 
     scene.add(transform);
 
@@ -271,32 +270,10 @@ function createStoryboard(){
 
     storyboard = new THREE.Group();
 
-    //for (let x = 0; x < 1; x++) {
-            
-    board = new THREE.Mesh(boardGeometry, boardMaterial);
-    board_child = new THREE.Mesh(boardGeometry_child, boardMaterial_child);
-    board_wall = new THREE.Mesh(boardGeometry_wall, boardMaterial);
-
-    //board.position.x = x * 50;
-
-    storyboard.add(board);
-    board.add(board_child);
-
-    board_wall.position.y = 7;
-    board_wall.position.z = -10;
-
-    board.add(board_wall);
-   
-    //}
-
-    scene.add(storyboard);
-
-    // --- add additional storyboards by clicking on the button --- //
-
     let addingBoard = document.getElementById("addingStoryboard");
     addingBoard.addEventListener("click", addStoryboard, false);
 
-    let pos = 50;
+    let pos = 0;
 
     function addStoryboard(){
         board = new THREE.Mesh(boardGeometry, boardMaterial);
@@ -313,7 +290,11 @@ function createStoryboard(){
         board_wall.position.z = -10;
 
         board.add(board_wall);
+        storyboards.push(storyboard);
+        scene.add(storyboard);
     }
+
+    addStoryboard();
 
     // --- add the label of the scene --- // 
     //possible idea on https://threejsfundamentals.org/threejs/lessons/threejs-billboards.html
@@ -343,182 +324,29 @@ function createStoryboard(){
 
 }*/
 
-// ---------------------------------------------------------------------------- 
-//  OnClick Function - adding gltf-objects by clicking on the menu
-// ----------------------------------------------------------------------------
-    let addingMan = document.getElementById("man");
-    //addingMan.addEventListener("click", addMan, false);
-    //let x = event.offsetX;
-    addingMan.addEventListener("dragstart", addMan, false);
-    addingMan.addEventListener("drag", function(){ }, false);
-    /*addingMan.addEventListener("drop", event =>{
-        mouse.x = event.clientX / window.innerWidth * 2-1;
-        mouse.y = event.clientY / window.innerHeight * 2+1;
-        raycaster.setFromCamera(mouse, camera);
-        //camera.position.x = mouse.x;
-        //camera.position.y = mouse.y;
-    }, false);*/
 
-    addingMan.addEventListener("drop", (event) =>{
-        addMan.position.x = event.clientX;
-        addMan.position.y = event.clientY;
-    });
+function createFigures(){
+    for (const fig of FIGURES) {
+        const element = document.getElementById(fig.domElement);
+        function spawnFigure(event){
+            dropPosition.setPosition(event, renderer.domElement);
+            const pos = intersectionPosition(dropPosition, camera, storyboards);
+            const loader = new GLTFLoader();
+            loader.load(fig.imagePath, (gltf) => {
+                const figure = gltf.scene;
+                figure.scale.set(fig.scale.x, fig.scale.y, fig.scale.z);
+                figure.position.set(pos.x, pos.y, pos.z);
+                scene.add(figure);
+                objects.push(figure);
+            })
+        }
 
-    //based on https://htmldom.dev/make-a-draggable-element/
-    /*let x = 0;
-    let y = 0;
-
-    const mouseDownHandler = function(e){
-        x = e.clientX;
-        y = e.clientY;
-
-        document.addEventListener('mousemove', mouseMoveHandler);
-        //
-        document.addEventListener('mousedown', addMan, false);
-    };
-
-    const mouseMoveHandler = function(e){
-        const dx = e.clientX - x;
-        const dy = e.clientY - y;
-        addingMan.style.top = `${addingMan.offsetTop + dy}px`; 
-        addingMan.style.let = `${addingMan.offsetLeft + dx}px`;
-
-        x = e.clientX;
-        y = e.clientY;
-    };
-
-    const mouseUpHandler = function(){
-        document.removeEventListener('mousemove', mouseMoveHandler);
-        document.removeEventListener('mouseup', mouseUpHandler);
-    };
-    addingMan.addEventListener('mousedown', mouseDownHandler);*/    
-
-    function addMan(){
-        let loader = new GLTFLoader();
-        loader.load("../src/img/man.glb", function(gltf){ 
-            let figure = gltf.scene;
-            figure.scale.set(2, 2, 2);
-            console.log(figure);
-            //figure.position.set(-20,2,2);
-            scene.add(figure);
-            objects.push(figure);
-            transform.attach(figure);
-        },
-        function(xhr){
-            console.log((xhr.loaded / xhr.total*100)+ '% loaded');
-        }, 
-        function(error){
-            console.log('An error happened');
-        });
+        element.addEventListener("dragend", spawnFigure, false);
+    
     }
+}
 
-    let addingWoman = document.getElementById("woman");
-    addingWoman.addEventListener("click", addWoman, false);
-    function addWoman(){
-        let loader = new GLTFLoader();        
-        loader.load("../src/img/woman.glb", function(gltf){ 
-            let figure = gltf.scene;
-            figure.scale.set(2, 2, 2);
-            console.log(figure);
-            figure.position.set(-18,2,2);
-            scene.add(figure); 
-            objects.push(figure);
-            //transform.attach(figure);                               
-        },
-        function(xhr){
-            console.log((xhr.loaded / xhr.total*100)+ '% loaded');
-        }, 
-        function(error){
-            console.log('An error happened');
-        });
-    }
-
-    let addingTable = document.getElementById("table");
-    addingTable.addEventListener("click", addTable, false);
-    function addTable(){
-        let loader = new GLTFLoader();                   
-        loader.load("../src/img/table.glb", function(gltf){ 
-            let figure = gltf.scene;                      
-            console.log(figure);
-            figure.position.set(-15,2,2);
-            scene.add(figure); 
-            objects.push(figure);
-            //transform.attach(figure);                                
-        },
-        function(xhr){
-            console.log((xhr.loaded / xhr.total*100)+ '% loaded');
-        }, 
-        function(error){
-            console.log('An error happened');
-        });
-    }
-
-    let addingBicycle = document.getElementById("bicycle");
-    addingBicycle.addEventListener("click", addBicycle, false);
-    function addBicycle(){
-        let loader = new GLTFLoader();                   
-        loader.load("../src/img/bicycle.glb", function(gltf){ 
-            let figure = gltf.scene;  
-            figure.scale.set(1.5, 1.5, 1.5);                    
-            console.log(figure);
-            figure.position.set(-12,2,2);
-            scene.add(figure); 
-            objects.push(figure);
-            //transform.attach(figure);                                
-        },
-        function(xhr){
-            console.log((xhr.loaded / xhr.total*100)+ '% loaded');
-        }, 
-        function(error){
-            console.log('An error happened');
-        });
-    }
-
-    let addingFactory = document.getElementById("factory");
-    addingFactory.addEventListener("click", addFactory, false);
-    function addFactory(){
-        let loader = new GLTFLoader();                   
-        loader.load("../src/img/factory.glb", function(gltf){ 
-            let figure = gltf.scene;    
-            figure.scale.set(5, 5, 5);                  
-            console.log(figure);
-            figure.position.set(-10,2,2);
-            scene.add(figure);
-            objects.push(figure);
-            //transform.attach(figure);                                
-        },
-        function(xhr){
-            console.log((xhr.loaded / xhr.total*100)+ '% loaded');
-        }, 
-        function(error){
-            console.log('An error happened');
-        });
-    }
-
-    let addingMeetingroom = document.getElementById("meetingroom");
-    addingMeetingroom.addEventListener("click", addMeetingroom, false);
-    function addMeetingroom(){
-        let loader = new GLTFLoader();                   
-        loader.load("../src/img/meeting_room.glb", function(gltf){ 
-            let figure = gltf.scene;   
-            figure.scale.set(3,3,3);                     
-            console.log(figure);
-            figure.position.set(-8,2,2);
-            scene.add(figure);  
-            objects.push(figure);
-            //transform.attach(figure);                                
-        },
-        function(xhr){
-            console.log((xhr.loaded / xhr.total*100)+ '% loaded');
-        }, 
-        function(error){
-            console.log('An error happened');
-        });
-    }
-// ----------------------------------------------------------------------------
-// End of OnClick Function
-// ----------------------------------------------------------------------------
-
+createFigures();
 
 
 // ----------------------------------------------------------------------------
