@@ -549,6 +549,7 @@ function onKeyDown(e){
 // ----------------------------------------------------------------------------
 
 
+let pickedObject,attachedTransform;
 
 // ----------------------------------------------------------------------------
 //  Render Function
@@ -559,6 +560,17 @@ function render() {
     renderer.render(scene, camera);
    //labelRenderer.render(cssScene, camera);
     picker.pick(pickPosition, camera, objects);
+    if (pickedObject && pickedObject.uuid != picker.pickedObject?.uuid ){
+        attachedTransform = false;
+    }
+    if(picker.pickedObject && !attachedTransform){
+        pickedObject = picker.pickedObject;
+        transform.detach();
+     
+        transform.attach(pickedObject);
+        attachedTransform = true;
+        console.log(pickedObject);
+    }
     requestAnimationFrame(render);
 }
 // ----------------------------------------------------------------------------
