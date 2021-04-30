@@ -186,15 +186,15 @@ let init = function(){
 
     // --- add the transform Controls, it makes it possible to move, rotate and scale the objects --- //
     transform = new TransformControls(camera, renderer.domElement);
-    /*transform.addEventListener('dragging-changed', function(event){
+    transform.addEventListener('dragging-changed', function(event){
         controls.enabled =! event.value;
-    });*/
-    transform.addEventListener('mouseDown', function(event){
+    });
+    /*transform.addEventListener('mouseDown', function(event){
         controls.enabled = false;
     });
     transform.addEventListener('mouseUp', function(event){
         controls.enabled = true;
-    });
+    });*/
 
     scene.add(transform);
 
