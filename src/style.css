@@ -4,6 +4,12 @@ body{
     font-family: "Lato", sans-serif;
 }
 
+#container{
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
 .navbar {
     overflow: hidden;
     background-color: #333; 
@@ -117,11 +123,12 @@ input { width: 90px;}
 }
 
 
-.label{
+#label{
     color: #fff;
     font-family: sans-serif;
     padding: 2px;
     background: rgba(0, 0, 0, 0.6);
+    position:static;
 }
 
 #infoText{

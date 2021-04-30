@@ -50,11 +50,14 @@
         </div>
         </div>
         
-        <div id="container"></div>
-        <div id="holder" style="visibility: hidden" ></div>
-        <div id="tooltip" style="visibility: hidden; position: absolute; color: white; font-family: sans-serif"></div>
-
-        <!-- Start container for the object properties  -->
+        <div id="container">
+            <div id="labels" style="visibility: hidden; position: absolute"></div>
+            <div id="holder" style="position: absolute" ></div>
+            <div id="moveObjects">"G" to move | "R" to rotate | "S" to scale </div> <!--Information about which key to press to move the SAP Scene objects-->
+        </div>
+        
+        
+        <!-- Start table for the object properties  -->
         <div id="properties" style="visibility: hidden">
             <h3>Object Properties</h3>
             <table class="propertiesTable" style="min-width: 290px;">
@@ -63,20 +66,19 @@
                     <td><input id="name" type="string" /></td>
                 </tr>
                 <tr>
-                    <td>X-Axis:</td>
-                    <td><input id="x-axis" type="number" value="0" step="0.5" /></td>
+                    <td>X:</td>
+                    <td><input id="x" type="number" step="0.5" /> cm</td>
                 </tr>
                 <tr>
-                    <td>Y-Axis:</td>
-                    <td><input id="y-axis" type="number" value="0" step="0.5" /></td>
+                    <td>Y:</td>
+                    <td><input id="y" type="number" step="0.5" /> cm</td>
                 </tr>
             </table>
         </div>
 
-        <!--<input type="text" id="levelHeightProp" style="width: 100px; border: 1px solid rgb(42, 42, 42); font-size: 14px; color: white; font-family: &quot;Courier New&quot;, Courier, monospace; background-color: rgb(78, 78, 78);" class="editable" onchange="validatePlusOrMinusNumber(this, updateLevelHeight);" maxlength="8">-->
+    
 
-        <!--Information about which key to press to move the SAP Scene objects-->
-        <div id="moveObjects">"G" to move | "R" to rotate | "S" to scale </div>
+        
 
         <!-- that the dropdown stayes-->
         <!--based on idea: https://stackoverflow.com/questions/41545067/how-to-change-hover-menu-to-clickable-menu-->

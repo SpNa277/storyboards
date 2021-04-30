@@ -35,12 +35,6 @@ let transform;
 let dragControls;
 
 
-
-// ----------------------------------------------------------------------------
-// end of global variables
-// ----------------------------------------------------------------------------
-
-
 window.requestAnimationFrame(render);
 
   
@@ -51,6 +45,9 @@ const pickPosition = new PickPosition();
 let stats = new Stats();
 document.body.appendChild(stats.domElement);
 
+// ----------------------------------------------------------------------------
+// end of global variables
+// ----------------------------------------------------------------------------
 
 
 // ----------------------------------------------------------------------------
@@ -83,15 +80,14 @@ let init = function(){
     renderer.shadowMap.enabled = true;
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.outputEncoding = THREE.sRGBEncoding; //configure textures referenced from .glb
-    // --- to be able to locate on the browser --- //
-    //document.body.appendChild(renderer.domElement);
-    container.appendChild(renderer.domElement);
+    container.appendChild(renderer.domElement); // to be able to locate on the browser
 
     /*labelRenderer = new CSS2DRenderer();
     labelRenderer.setSize(window.innerWidth, window.innerHeight);
     labelRenderer.domElement.style.position = 'fixed';
     labelRenderer.domElement.style.top = '0px';
-    document.body.appendChild(labelRenderer.domElement);*/
+    //document.body.appendChild(labelRenderer.domElement);
+    container.appendChild(labelRenderer.domElement);*/
 
     /*labelRenderer = new CSS3DRenderer();
     labelRenderer.setSize(window.innerWidth, window.innerHeight);
@@ -101,13 +97,13 @@ let init = function(){
     //document.body.appendChild(labelRenderer.domElement);
     container.appendChild(labelRenderer.domElement);*/
    
-    // --- create the floor --- // 
     /*const floorGometry = new THREE.PlaneGeometry( 400, 80 );
     const floorMaterial = new THREE.MeshBasicMaterial( {color: 0xaaaaaa} );
     const floor = new THREE.Mesh( floorGometry, floorMaterial );
     floor.rotation.x = - Math.PI / 2;
     scene.add( floor );*/
 
+    // --- create the floor --- // 
     const grid = new THREE.GridHelper(1000, 200);
     grid.material.opacity = 0.2;
     grid.color = 0xeeeeee;
@@ -115,58 +111,10 @@ let init = function(){
     grid.material.transparent = true;
     scene.add( grid );
 
-    // --- create the storyboard with different squares--- //
-    const boardGeometry = new THREE.BoxGeometry(20, 0.9, 20);
-    const boardMaterial = new THREE.MeshLambertMaterial( {color: 0xeeeeee, side:THREE.DoubleSide });
-    const boardGeometry_child = new THREE.BoxGeometry(19, 1, 18);
-    const boardMaterial_child = new THREE.MeshLambertMaterial( {color: 0xc6c2c2, side:THREE.DoubleSide });
-    const boardGeometry_wall = new THREE.BoxGeometry(20, 15, 0.9);
+    //create Storyboard
+    createStoryboard();
 
-    storyboard = new THREE.Group();
-
-    //for (let x = 0; x < 1; x++) {
-            
-    board = new THREE.Mesh(boardGeometry, boardMaterial);
-    board_child = new THREE.Mesh(boardGeometry_child, boardMaterial_child);
-    board_wall = new THREE.Mesh(boardGeometry_wall, boardMaterial);
-
-    //board.position.x = x * 50;
-
-    storyboard.add(board);
-    board.add(board_child);
-
-    board_wall.position.y = 7;
-    board_wall.position.z = -10;
-
-    board.add(board_wall);
-   
-    //}
-
-    scene.add(storyboard);
-
-    let addingBoard = document.getElementById("addingStoryboard");
-    addingBoard.addEventListener("click", addStoryboard, false);
-
-    let pos = 50;
-
-    function addStoryboard(){
-        board = new THREE.Mesh(boardGeometry, boardMaterial);
-        board_child = new THREE.Mesh(boardGeometry_child, boardMaterial_child);
-        board_wall = new THREE.Mesh(boardGeometry_wall, boardMaterial);
-               
-        board.position.x = pos;
-        pos += 50;
-
-        storyboard.add(board);
-        board.add(board_child);
-
-        board_wall.position.y = 7;
-        board_wall.position.z = -10;
-
-        board.add(board_wall);
-
-    }
-
+    // -------------------------------------- tried something with CCS2D or CCS3D Renderer   
     /*let boardDiv = new THREE.Object3D();
     //boardDiv = document.getElementById("info");
     boardDiv.appendChild(document.createTextNode('Scene'));
@@ -210,21 +158,20 @@ let init = function(){
     const boardLabel = new CSS2DObject(boardDiv);
     board_wall.add(boardLabel);*/
 
-    
-        /*var textGeo = new THREE.TextGeometry();
-        textGeo.computeBoundingBox();
-        textGeo.computeVertexNormals();
+    /*var textGeo = new THREE.TextGeometry();
+    textGeo.computeBoundingBox();
+    textGeo.computeVertexNormals();
 
-        var material = new THREE.MeshFaceMaterial([
-            new THREE.MeshPhongMaterial({color: 0xff22cc, shading: THREE.FlatShading}), // front
-            new THREE.MeshPhongMaterial({color: 0xff22cc, shading: THREE.SmoothShading}) // side
-        ]);
+    var material = new THREE.MeshFaceMaterial([
+        new THREE.MeshPhongMaterial({color: 0xff22cc, shading: THREE.FlatShading}), // front
+        new THREE.MeshPhongMaterial({color: 0xff22cc, shading: THREE.SmoothShading}) // side
+    ]);
 
-        var textMesh = new THREE.Mesh(textGeo, material);
-        textMesh.position.x = -textGeo.boundingBox.max.x / 2;
-        textMesh.position.y = -200;
-        textMesh.name = 'text';
-        scene.add(textMesh);*/    
+    var textMesh = new THREE.Mesh(textGeo, material);
+    textMesh.position.x = -textGeo.boundingBox.max.x / 2;
+    textMesh.position.y = -200;
+    textMesh.name = 'text';
+    scene.add(textMesh);*/    
 
     // -------------------------------------- end of creating the storyboard
                    
@@ -235,6 +182,9 @@ let init = function(){
     controls.update();
     //controls.addEventListener('change', render);
 
+    // -------------------------------------- end of orbit control
+
+    // --- add the transform Controls, it makes it possible to move, rotate and scale the objects --- //
     transform = new TransformControls(camera, renderer.domElement);
     /*transform.addEventListener('dragging-changed', function(event){
         controls.enabled =! event.value;
@@ -269,33 +219,120 @@ let init = function(){
         transform.detach();
         scene.remove(transform);
     }*/
+    // -------------------------------------- end of transform control
 
     // --- generates a prefiltered, midmapped radiance environment MAP --- //
-    let pmremGenerator = new THREE.PMREMGenerator( renderer );
-    pmremGenerator.compileEquirectangularShader();
+    //let pmremGenerator = new THREE.PMREMGenerator( renderer );
+    //pmremGenerator.compileEquirectangularShader();
 
-    // --- Drag function --- //
-    //dragControl();
 
-    //
+    // -------------------------------------- add event listener
     document.addEventListener("keydown", onKeyDown, false);
 
-    window.addEventListener('click', (event) => {
-        console.log("coucou", event);
-        console.log("Salut", picker.pickedObject);
-        pickPosition.setPosition(event, renderer.domElement);
-    });
+    /*let valueName = document.getElementById("name");
+    let valueX = document.getElementById("x");
+    let valueY = document.getElementById("y");
+    valueX.value = event.clientX.toFixed(3);
+    valueY.value = event.clientY.toFixed(3);
+    valueX.addEventListener('change', changeValueX);
+    function changeValueX(event){
+       // objects = parseFloat(event.target.value)
+    };*/
+
+    window.addEventListener('click', (event) => pickPosition.setPosition(event, renderer.domElement));
     window.addEventListener('mouseout', () => pickPosition.reset());
     window.addEventListener('mouseleave', () => pickPosition.reset());
 
     //drag background to the wall of the board
-   //setupDragDrop();
+    setupDragDrop();
+
+    // --- Drag function --- //
+    //dragControl();
 
 };
 // ----------------------------------------------------------------------------
 //  End of Init Function
 // ----------------------------------------------------------------------------
 
+
+
+
+
+// ----------------------------------------------------------------------------
+//  create the Storyboard Function
+// ----------------------------------------------------------------------------
+function createStoryboard(){
+    // --- create the first storyboard--- //
+    const boardGeometry = new THREE.BoxGeometry(20, 0.9, 20);
+    const boardMaterial = new THREE.MeshLambertMaterial( {color: 0xeeeeee, side:THREE.DoubleSide });
+    const boardGeometry_child = new THREE.BoxGeometry(19, 1, 18);
+    const boardMaterial_child = new THREE.MeshLambertMaterial( {color: 0xc6c2c2, side:THREE.DoubleSide });
+    const boardGeometry_wall = new THREE.BoxGeometry(20, 15, 0.9);
+
+    storyboard = new THREE.Group();
+
+    //for (let x = 0; x < 1; x++) {
+            
+    board = new THREE.Mesh(boardGeometry, boardMaterial);
+    board_child = new THREE.Mesh(boardGeometry_child, boardMaterial_child);
+    board_wall = new THREE.Mesh(boardGeometry_wall, boardMaterial);
+
+    //board.position.x = x * 50;
+
+    storyboard.add(board);
+    board.add(board_child);
+
+    board_wall.position.y = 7;
+    board_wall.position.z = -10;
+
+    board.add(board_wall);
+   
+    //}
+
+    scene.add(storyboard);
+
+    // --- add additional storyboards by clicking on the button --- //
+
+    let addingBoard = document.getElementById("addingStoryboard");
+    addingBoard.addEventListener("click", addStoryboard, false);
+
+    let pos = 50;
+
+    function addStoryboard(){
+        board = new THREE.Mesh(boardGeometry, boardMaterial);
+        board_child = new THREE.Mesh(boardGeometry_child, boardMaterial_child);
+        board_wall = new THREE.Mesh(boardGeometry_wall, boardMaterial);
+               
+        board.position.x = pos;
+        pos += 50;
+
+        storyboard.add(board);
+        board.add(board_child);
+
+        board_wall.position.y = 7;
+        board_wall.position.z = -10;
+
+        board.add(board_wall);
+    }
+
+    // --- add the label of the scene --- // 
+    //possible idea on https://threejsfundamentals.org/threejs/lessons/threejs-billboards.html
+    // another idea https://threejsfundamentals.org/threejs/lessons/threejs-align-html-elements-to-3d.html
+    /*const map = new THREE.TextureLoader().load('sprite.png');
+    const material = new THREE.SpriteMaterial({map: map});
+    const sprite = new THREE.Sprite(material);
+    scene.add(sprite);*/
+
+
+}
+// ----------------------------------------------------------------------------
+//  End of the Storyboard Function
+// ----------------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------------
+// CSS3D Renderer - most probably delete it ;-) 
+// ----------------------------------------------------------------------------
 /*function createCSS3DObject(s){
     let element = document.createElement('div');
     element.innerHTML = s;
@@ -310,10 +347,10 @@ let init = function(){
 //  OnClick Function - adding gltf-objects by clicking on the menu
 // ----------------------------------------------------------------------------
     let addingMan = document.getElementById("man");
-    addingMan.addEventListener("click", addMan, false);
+    //addingMan.addEventListener("click", addMan, false);
     //let x = event.offsetX;
-    //addingMan.addEventListener("dragstart", addMan, false);
-    //addingMan.addEventListener("drag", function(){ }, false);
+    addingMan.addEventListener("dragstart", addMan, false);
+    addingMan.addEventListener("drag", function(){ }, false);
     /*addingMan.addEventListener("drop", event =>{
         mouse.x = event.clientX / window.innerWidth * 2-1;
         mouse.y = event.clientY / window.innerHeight * 2+1;
@@ -322,10 +359,10 @@ let init = function(){
         //camera.position.y = mouse.y;
     }, false);*/
 
-    /*addingMan.addEventListener("drop", (event) =>{
-        event.screenX;
-        event.screenY;
-    });*/
+    addingMan.addEventListener("drop", (event) =>{
+        addMan.position.x = event.clientX;
+        addMan.position.y = event.clientY;
+    });
 
     //based on https://htmldom.dev/make-a-draggable-element/
     /*let x = 0;
@@ -357,16 +394,15 @@ let init = function(){
     addingMan.addEventListener('mousedown', mouseDownHandler);*/    
 
     function addMan(){
-        console.log("man");
         let loader = new GLTFLoader();
         loader.load("../src/img/man.glb", function(gltf){ 
             let figure = gltf.scene;
             figure.scale.set(2, 2, 2);
             console.log(figure);
-            figure.position.set(-20,2,2);
+            //figure.position.set(-20,2,2);
             scene.add(figure);
             objects.push(figure);
-            //transform.attach(figure);
+            transform.attach(figure);
         },
         function(xhr){
             console.log((xhr.loaded / xhr.total*100)+ '% loaded');
@@ -479,8 +515,6 @@ let init = function(){
             console.log('An error happened');
         });
     }
-
-
 // ----------------------------------------------------------------------------
 // End of OnClick Function
 // ----------------------------------------------------------------------------
@@ -512,7 +546,7 @@ function dragControl(){
 //  End of DragControl Function
 // ----------------------------------------------------------------------------
 
-/*function setupDragDrop(){
+function setupDragDrop(){
     let holder = document.getElementById('holder');
 
 
@@ -551,7 +585,7 @@ function dragControl(){
 
         return false;
     }
-}*/
+}
 
 // ----------------------------------------------------------------------------
 //  Resize Function - reports the window size each time it is resized
@@ -571,7 +605,7 @@ function onWindowResize(){
 // ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
-//  onKeyDown Function - to move around the scene with defined keys
+//  onKeyDown Function - to move around the scene
 // ----------------------------------------------------------------------------
 function onKeyDown(e){
     if(e.keyCode == LEFT)
@@ -598,7 +632,7 @@ function render() {
     controls.update();
     stats.update();
     renderer.render(scene, camera);
-   //labelRenderer.render(cssScene, camera);
+    //labelRenderer.render(scene, camera);
     picker.pick(pickPosition, camera, objects);
     requestAnimationFrame(render);
 }
