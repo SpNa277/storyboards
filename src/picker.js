@@ -16,7 +16,6 @@ export class Picker {
       this.pickedObject = undefined;
     }
     
-    //let propertyTable = document.getElementById("properties");
     // cast a ray through the frustum
     this.raycaster.setFromCamera(normalizedPosition, camera);
     // get the list of objects the ray intersected
@@ -24,14 +23,9 @@ export class Picker {
     if (intersectedObjects.length) {
       // pick the first object. It's the closest one
       this.pickedObject = intersectedObjects[0].object;
-      // save its color
-      //this.pickedObjectSavedColor = this.pickedObject.material.emissive.getHex();
       // set its emissive color 
       this.pickedObject.material.emissive.set(0x901e1e);
-      //propertyTable.style.visibility = 'visible';
-    }/*else{
-      propertyTable.style.visibility = 'hidden';
-    }*/
+    }
   }
 }
   

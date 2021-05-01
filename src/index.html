@@ -51,36 +51,10 @@
         </div>
         
         <div id="container">
-            <div id="labels" style="visibility: hidden; position: absolute"></div>
-            <div id="holder" style="visibility: hidden; position: absolute" ></div>
-            <div id="moveObjects">"G" to move | "R" to rotate | "S" to scale </div> <!--Information about which key to press to move the SAP Scene objects-->
+            <div id="labels"></div>
+            <div id="moveObjects">"G" to move | "R" to rotate | "S" to scale </div>
         </div>
         
-
-        <!-- Start table for the object properties  -->
-        <div id="properties" style="visibility: hidden">
-            <h3>Object Properties</h3>
-            <table class="propertiesTable" style="min-width: 290px;">
-                <tr>
-                    <td>Name:</td>
-                    <td><input id="name" type="string" /></td>
-                </tr>
-                <tr>
-                    <td>X:</td>
-                    <td><input id="x" type="number" step="0.5" /> cm</td>
-                </tr>
-                <tr>
-                    <td>Y:</td>
-                    <td><input id="y" type="number" step="0.5" /> cm</td>
-                </tr>
-            </table>
-        </div>
-
-    
-
-        
-
-        <!-- that the dropdown stayes-->
         <!--based on idea: https://stackoverflow.com/questions/41545067/how-to-change-hover-menu-to-clickable-menu-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script>
