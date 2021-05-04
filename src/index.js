@@ -112,6 +112,10 @@ let init = function(){
     window.addEventListener('click', (event) => pickPosition.setPosition(event, renderer.domElement));
     window.addEventListener('mouseout', () => pickPosition.reset());
     window.addEventListener('mouseleave', () => pickPosition.reset());
+
+    
+
+    
 };
 
 // ----------------------------------------------------------------------------
