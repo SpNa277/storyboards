@@ -5,6 +5,7 @@ import { TransformControls } from '../node_modules/three/examples/jsm/controls/T
 import { Picker, PickPosition, intersectionPosition } from './picker.js';
 import Stats from '../node_modules/three/examples/jsm/libs/stats.module.js';
 import { FIGURES } from './figure.js';
+import { exportFigures } from './export.js';
 
 
 // ----------------------------------------------------------------------------
@@ -150,6 +151,13 @@ function createStoryboard(){
     }
 
     addStoryboard();
+}
+
+const exportButton = document.getElementById("export");
+exportButton.addEventListener("click", exportXML, false);
+
+function exportXML(){
+    exportFigures(FIGURES);
 }
 
 // ----------------------------------------------------------------------------

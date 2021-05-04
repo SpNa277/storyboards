@@ -6,7 +6,9 @@ export const FIGURES = [{
         x: 2,
         y: 2,
         z: 2,     
-    }
+    },
+    class: "Character",
+    type: "Business_man",
 },{
     name: "Woman",
     domElement: "woman",
@@ -15,7 +17,9 @@ export const FIGURES = [{
         x: 2,
         y: 2,
         z: 2,     
-    } 
+    },
+    class: "Character",
+    type: "Woman_03", 
 },{
     name: "Table",
     domElement: "table",
@@ -24,7 +28,9 @@ export const FIGURES = [{
         x: 1,
         y: 1,
         z: 1,     
-    } 
+    },
+    class: "Furniture",
+    type: "Table_01", 
 },{
     name: "Bicycle",
     domElement: "bicycle",
@@ -33,7 +39,9 @@ export const FIGURES = [{
         x: 1.5,
         y: 1.5,
         z: 1.5,     
-    } 
+    },
+    class: "Transportation_Element",
+    type: "Bike", 
 },{
     name: "Factory",
     domElement: "factory",
@@ -42,7 +50,9 @@ export const FIGURES = [{
         x: 5,
         y: 5,
         z: 5,     
-    }
+    },
+    class: "Building",
+    type: "Factory",
 },{
     name: "Meeting Room",
     domElement: "meetingroom",
@@ -51,5 +61,7 @@ export const FIGURES = [{
         x: 3,
         y: 3,
         z: 3,     
-    }
+    },
+    class: "Background",
+    type: "Meeting_Room_01",
 }];
