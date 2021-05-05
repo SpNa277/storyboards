@@ -38,6 +38,8 @@ let stats = new Stats();
 document.body.appendChild(stats.domElement);
 
 
+
+
 // ----------------------------------------------------------------------------
 //  Init Function - initialize the project
 // ----------------------------------------------------------------------------
@@ -50,13 +52,14 @@ let init = function(){
     // --- create and locate the camera --- //
     camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 1000);
     camera.position.set(0, 7, 20);
-    camera.lookAt(scene.position);   
+    camera.lookAt(scene.position);
 
     // --- create the light --- //
     light = new THREE.AmbientLight(0xffffff);
-    //light = new THREE.DirectionalLight(0xffffff, 2);
-    //light.position.set(1,1,1);
     scene.add(light);
+
+    let axesHelper = new THREE.AxesHelper(1000);
+    scene.add(axesHelper);
     
 
     // --- create the renderer --- //
@@ -111,11 +114,7 @@ let init = function(){
     document.addEventListener("keydown", onKeyDown, false);
     window.addEventListener('click', (event) => pickPosition.setPosition(event, renderer.domElement));
     window.addEventListener('mouseout', () => pickPosition.reset());
-    window.addEventListener('mouseleave', () => pickPosition.reset());
-
-    
-
-    
+    window.addEventListener('mouseleave', () => pickPosition.reset());  
 };
 
 // ----------------------------------------------------------------------------
@@ -210,13 +209,13 @@ function createFigures(){
         const element = document.getElementById(fig.domElement);
         function spawnFigure(event){
             dropPosition.setPosition(event, renderer.domElement);
-            const pos = intersectionPosition(dropPosition, camera, storyboards);
+            const pos = intersectionPosition(dropPosition, camera, storyboards); //here it depends what you want to intersect with
             const loader = new GLTFLoader();
             loader.load(fig.imagePath, (gltf) => {
                 const figure = gltf.scene;
                 figure.scale.set(fig.scale.x, fig.scale.y, fig.scale.z);
-                figure.position.set(pos.x, pos.y, pos.z);
-                figure.label = createLabel(fig.name, pos);
+                figure.position.set(pos.x, pos.y + fig.dropHeight, pos.z);
+                figure.label = createLabel(fig.name, pos); //here the creation of the label
                 scene.add(figure);
                 console.log(figure);
                 objects.push(figure);
@@ -246,15 +245,15 @@ function onWindowResize(){
 // ----------------------------------------------------------------------------
 //  onKeyDown Function - to move around the scene
 // ----------------------------------------------------------------------------
-function onKeyDown(e){
-    if(e.keyCode == LEFT)
-        scene.position.x += 2;
-    else if(e.keyCode == RIGHT)
-        scene.position.x -= 2;
-    else if(e.keyCode == UP)
-        scene.position.z += 2;
-    else if(e.keyCode == DOWN)
-        scene.position.z -= 2;
+function onKeyDown(event){
+    if(event.keyCode == LEFT)
+        camera.position.x += 2;
+    else if(event.keyCode == RIGHT)
+        camera.position.x -= 2;
+    else if(event.keyCode == UP)
+        camera.position.z += 2;
+    else if(event.keyCode == DOWN)
+        camera.position.z -= 2;
     else
         return;
 }

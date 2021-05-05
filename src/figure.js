@@ -7,6 +7,7 @@ export const FIGURES = [{
         y: 2,
         z: 2,     
     },
+    dropHeight: 1,
     class: "Character",
     type: "Business_man",
 },{
@@ -18,6 +19,7 @@ export const FIGURES = [{
         y: 2,
         z: 2,     
     },
+    dropHeight: 1,
     class: "Character",
     type: "Woman_03", 
 },{
@@ -29,6 +31,7 @@ export const FIGURES = [{
         y: 1,
         z: 1,     
     },
+    dropHeight: 0.5,
     class: "Furniture",
     type: "Table_01", 
 },{
@@ -36,10 +39,11 @@ export const FIGURES = [{
     domElement: "bicycle",
     imagePath: "./img/bicycle.glb",
     scale: {
-        x: 1.5,
-        y: 1.5,
-        z: 1.5,     
+        x: 2,
+        y: 2,
+        z: 2,     
     },
+    dropHeight: 1,
     class: "Transportation_Element",
     type: "Bike", 
 },{
@@ -51,6 +55,7 @@ export const FIGURES = [{
         y: 5,
         z: 5,     
     },
+    dropHeight: 2.5,
     class: "Building",
     type: "Factory",
 },{
@@ -58,10 +63,11 @@ export const FIGURES = [{
     domElement: "meetingroom",
     imagePath: "./img/meeting_room.glb",
     scale: {
-        x: 3,
-        y: 3,
-        z: 3,     
+        x: 6,
+        y: 6,
+        z: 6,     
     },
+    dropHeight: 3,
     class: "Background",
     type: "Meeting_Room_01",
 }];

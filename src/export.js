@@ -46,7 +46,7 @@ export function generateXML(figures) {
   model.setAttribute("applib", "Scene2Model Dynamic v1.5.2");
   
 
-  //actually empty, all the info isn't needed, but the tag is required
+  //created element is empty, all the info isn't needed, but the tag is required
   const modelattributes = doc.createElement("MODELATTRIBUTES"); 
   model.appendChild(modelattributes);
   
