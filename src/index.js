@@ -16,7 +16,7 @@ let scene, camera, renderer, light, controls;
 const objects = [];
 const storyboards = [];
 
-let board, board_child, board_wall, storyboard;
+let board, boardChild, boardWall, storyboard;
 
 const LEFT = 37, RIGHT = 39, UP = 38, DOWN = 40;
 
@@ -123,9 +123,9 @@ let init = function(){
 function createStoryboard(){
     const boardGeometry = new THREE.BoxGeometry(20, 0.9, 20);
     const boardMaterial = new THREE.MeshLambertMaterial( {color: 0xeeeeee, side:THREE.DoubleSide });
-    const boardGeometry_child = new THREE.BoxGeometry(19, 1, 18);
-    const boardMaterial_child = new THREE.MeshLambertMaterial( {color: 0xc6c2c2, side:THREE.DoubleSide });
-    const boardGeometry_wall = new THREE.BoxGeometry(20, 15, 0.9);
+    const boardGeometryChild = new THREE.BoxGeometry(19, 1, 18);
+    const boardMaterialChild = new THREE.MeshLambertMaterial( {color: 0xc6c2c2, side:THREE.DoubleSide });
+    const boardGeometryWall = new THREE.BoxGeometry(20, 15, 0.9);
 
     storyboard = new THREE.Group();
 
@@ -133,29 +133,39 @@ function createStoryboard(){
     addingBoard.addEventListener("click", addStoryboard, false);
 
     let pos = 0;
+    let boardNumber = 1;
+    let boardName;
+    let labelPosition;
 
     function addStoryboard(){
         board = new THREE.Mesh(boardGeometry, boardMaterial);
-        board_child = new THREE.Mesh(boardGeometry_child, boardMaterial_child);
-        board_wall = new THREE.Mesh(boardGeometry_wall, boardMaterial);
+        boardChild = new THREE.Mesh(boardGeometryChild, boardMaterialChild);
+        boardWall = new THREE.Mesh(boardGeometryWall, boardMaterial);
                
         board.position.x = pos;
-        pos += 50;
-
+        boardWall.position.y = 7;
+        boardWall.position.z = -10;
+        
         storyboard.add(board);
-        board.add(board_child);
-
-        board_wall.position.y = 7;
-        board_wall.position.z = -10;
-
-        board.add(board_wall);
+        board.add(boardChild);
+        board.add(boardWall);
         storyboards.push(storyboard);
         scene.add(storyboard);
+
+        boardName = "Scene "+ boardNumber;
+        boardNumber += 1;
+        labelPosition = new THREE.Vector3(pos, 13, -10);
+        pos += 50;
+
+        createLabel(boardName, labelPosition);
     }
 
     addStoryboard();
 }
 
+// ----------------------------------------------------------------------------
+//  Create Export Button and Download XML File to import to Scene2Model
+// ----------------------------------------------------------------------------
 const exportButton = document.getElementById("export");
 exportButton.addEventListener("click", exportXML, false);
 
@@ -215,7 +225,7 @@ function createFigures(){
                 const figure = gltf.scene;
                 figure.scale.set(fig.scale.x, fig.scale.y, fig.scale.z);
                 figure.position.set(pos.x, pos.y + fig.dropHeight, pos.z);
-                figure.label = createLabel(fig.name, pos); //here the creation of the label
+                figure.label = createLabel(fig.name, pos); //here the adding of the label to the figure
                 scene.add(figure);
                 console.log(figure);
                 objects.push(figure);
@@ -247,13 +257,13 @@ function onWindowResize(){
 // ----------------------------------------------------------------------------
 function onKeyDown(event){
     if(event.keyCode == LEFT)
-        camera.position.x += 2;
+        scene.position.x += 2;
     else if(event.keyCode == RIGHT)
-        camera.position.x -= 2;
+        scene.position.x -= 2;
     else if(event.keyCode == UP)
-        camera.position.z += 2;
+        scene.position.z += 2;
     else if(event.keyCode == DOWN)
-        camera.position.z -= 2;
+        scene.position.z -= 2;
     else
         return;
 }
