@@ -62,7 +62,7 @@ function getCanvasRelativePosition(event, domElement) {
 export function intersectionPosition(normalizedPosition, camera, objects){
   const raycaster = new THREE.Raycaster();
 
-  raycaster.setFromCamera(normalizedPosition, camera);
+  raycaster.setFromCamera(normalizedPosition, camera); //updates the ray with a new origin and direction.
     // get the list of objects the ray intersected
     const intersectedObjects = raycaster.intersectObjects(objects, true);
     if (intersectedObjects.length) {

@@ -95,3 +95,17 @@ body{
     color: rgb(230, 28, 28);
     pointer-events:none;
 }
+
+#export{
+    border:white;
+    background-color:grey;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    padding: 8px;
+    margin-right: 0px;
+    cursor: pointer;
+    position: absolute;
+    right: 40px;
+    top: 40px;
+}

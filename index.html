@@ -10,9 +10,10 @@
     <body>
          <!--- MENU --> 
         <div class="navbar">
-            <div style="color:white; padding:0 16px; text-align: center;">
+            <div style="pointer-events:none; color:white; padding:0 16px; text-align: center;">
                 <h2>Storyboard</h2>
             </div>
+            
         
         <div class="subnav">
             <button class="subnavbtn">Character</button>
@@ -48,19 +49,20 @@
         <div class="subnav">
             <button class="subnavbtn" id="addingStoryboard">Add a Storyboard</button>
         </div>
-        <div class="subnav">
-            <button class="subnavbtn" id="export">Export</button>
+        
+        <div>
+            <button id="export">Export XML File</button>
         </div>
         </div>
         
         <div id="container">
             <div id="labels"></div>
-            <div id="moveObjects" style="pointer-events:none">"G" to move | "R" to rotate | "S" to scale </div>
+            <div id="moveObjects" style="pointer-events:none; color: black">"G" to move | "R" to rotate | "S" to scale </div>
         </div>
         
         <!--based on idea: https://stackoverflow.com/questions/41545067/how-to-change-hover-menu-to-clickable-menu-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        <script>
+        <!--<script>
             $('.subnavbtn').click(function () {
             var isvisible = $(this).next('.subnav-content').is(":visible")
             $('.subnav-content:visible').hide();
@@ -69,7 +71,8 @@
                     $(this).next('.subnav-content').toggle()
                 }
             })
-        </script>
+        </script>-->
+        
 
         <script src="src/index.js" type="module"></script>
     </body>    

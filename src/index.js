@@ -302,7 +302,6 @@ function render() {
      
         transform.attach(pickedObject);
         attachedTransform = true;
-        console.log(pickedObject);
     }
     if (resizeRendererToDisplaySize(renderer)) {
         const canvas = renderer.domElement;
