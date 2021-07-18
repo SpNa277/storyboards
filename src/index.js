@@ -225,7 +225,8 @@ function createFigures(){
                 const figure = gltf.scene;
                 figure.scale.set(fig.scale.x, fig.scale.y, fig.scale.z);
                 figure.position.set(pos.x, pos.y + fig.dropHeight, pos.z);
-                figure.label = createLabel(fig.name, pos); //here the adding of the label to the figure
+                let labelPosition = new THREE.Vector3(pos.x, pos.y + fig.positionLabel, pos.z);
+                figure.label = createLabel(fig.name, labelPosition); //here the adding of the label to the figure
                 scene.add(figure);
                 console.log(figure);
                 objects.push(figure);

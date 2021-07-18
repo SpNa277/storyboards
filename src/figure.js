@@ -8,6 +8,7 @@ export const FIGURES = [{
         z: 2,     
     },
     dropHeight: 1,
+    positionLabel: 3,
     class: "Character",
     type: "Business_man",
 },{
@@ -20,6 +21,7 @@ export const FIGURES = [{
         z: 2,     
     },
     dropHeight: 1,
+    positionLabel: 3,
     class: "Character",
     type: "Woman_03", 
 },{
@@ -32,6 +34,7 @@ export const FIGURES = [{
         z: 1,     
     },
     dropHeight: 0.5,
+    positionLabel: 3,
     class: "Furniture",
     type: "Table_01", 
 },{
@@ -44,6 +47,7 @@ export const FIGURES = [{
         z: 2,     
     },
     dropHeight: 1,
+    positionLabel: 3,
     class: "Transportation_Element",
     type: "Bike", 
 },{
@@ -56,6 +60,7 @@ export const FIGURES = [{
         z: 5,     
     },
     dropHeight: 2.5,
+    positionLabel: 6.5,
     class: "Building",
     type: "Factory",
 },{
@@ -68,6 +73,7 @@ export const FIGURES = [{
         z: 6,     
     },
     dropHeight: 3,
+    positionLabel: 7,
     class: "Background",
     type: "Meeting_Room_01",
 }];
