@@ -196,7 +196,13 @@ const exportButton = document.getElementById("export");
 exportButton.addEventListener("click", exportXML, false);
 
 function exportXML() {
-  exportFigures(FIGURES);
+  const figures = objects.map((obj) => ({
+    name: obj.label.name,
+    class: obj.label.class,
+    type: obj.label.type,
+    position: obj.position,
+  }));
+  exportFigures(figures);
 }
 
 // ----------------------------------------------------------------------------
@@ -205,13 +211,15 @@ function exportXML() {
 const labelContainer = document.getElementById("labels");
 const labels = [];
 
-function createLabel(text, position) {
+function createLabel(fig, position) {
   const label = {
-    text,
+    name: fig.name,
+    class: fig.class,
+    type: fig.type,
     position,
     elem: document.createElement("div"),
   };
-  label.elem.innerHTML = label.text;
+  label.elem.innerHTML = label.name;
   labelContainer.appendChild(label.elem);
   labels.push(label);
   return label;
@@ -258,7 +266,7 @@ function createFigures() {
         pos.y + fig.positionLabel,
         pos.z
       );
-      figure.label = createLabel(fig.name, labelPosition); //here the adding of the label to the figure
+      figure.label = createLabel(fig, labelPosition); //here the adding of the label to the figure
       figure.label.offsetY = labelPosition.y - figure.position.y;
       scene.add(figure);
       console.log(figure);

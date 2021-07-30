@@ -62,7 +62,7 @@ export function generateXML(figures) {
     position.setAttribute("name", "Position");
     position.setAttribute("type", "STRING");
     // TODO: set the position of each figure
-    position.textContent = "NODE x:6.5cm y:8cm w:5.8cm h:4.9cm index:1";
+    position.textContent = `NODE x:${figure.position.x}cm y:${figure.position.y}cm w:5.8cm h:4.9cm index:1`;
     instance.appendChild(position);
 
     const type = doc.createElement("ATTRIBUTE");
