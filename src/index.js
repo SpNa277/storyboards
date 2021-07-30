@@ -16,7 +16,9 @@ let scene, camera, renderer, light, controls;
 const objects = [];
 const storyboards = [];
 
-let board, boardChild, boardWall, storyboard;
+let board, boardChild, boardWall, storyboard, boardWallLabel;
+let fontWallGeometryLabel, boardWallMaterialLabel;
+let boardNumber, boardName;
 
 const LEFT = 37, RIGHT = 39, UP = 38, DOWN = 40;
 
@@ -125,7 +127,22 @@ function createStoryboard(){
     const boardMaterial = new THREE.MeshLambertMaterial( {color: 0xeeeeee, side:THREE.DoubleSide });
     const boardGeometryChild = new THREE.BoxGeometry(19, 1, 18);
     const boardMaterialChild = new THREE.MeshLambertMaterial( {color: 0xc6c2c2, side:THREE.DoubleSide });
-    const boardGeometryWall = new THREE.BoxGeometry(20, 15, 0.9);
+    const boardGeometryWall = new THREE.BoxGeometry(20, 15, 0.9); 
+
+    
+    //create the text label
+    let boardWallFontLabel = new THREE.FontLoader();
+    boardWallFontLabel.load('/node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function(font){
+        fontWallGeometryLabel = new THREE.TextGeometry(boardName, {
+            font: font, 
+            size: 2, 
+            height: 0.5 
+        });
+        boardWallMaterialLabel = new THREE.MeshNormalMaterial({
+            transparent: true,
+            opacity: 0.9
+        });
+    });
 
     storyboard = new THREE.Group();
 
@@ -133,16 +150,23 @@ function createStoryboard(){
     addingBoard.addEventListener("click", addStoryboard, false);
 
     let pos = 0;
-    let boardNumber = 1;
-    let boardName;
-    let labelPosition;
+    let posLabel = -5;
+    boardNumber = 0;
 
     function addStoryboard(){
         board = new THREE.Mesh(boardGeometry, boardMaterial);
         boardChild = new THREE.Mesh(boardGeometryChild, boardMaterialChild);
         boardWall = new THREE.Mesh(boardGeometryWall, boardMaterial);
-               
+        boardWallLabel = new THREE.Mesh(fontWallGeometryLabel, boardWallMaterialLabel);
+            
+        boardWallLabel.position.set(posLabel, 15, -10);
+        posLabel += 50;
+        boardName = 'Scene '+ boardNumber;
+        boardNumber += 1;
+        scene.add(boardWallLabel);
+
         board.position.x = pos;
+        pos += 50;
         boardWall.position.y = 7;
         boardWall.position.z = -10;
         
@@ -150,14 +174,7 @@ function createStoryboard(){
         board.add(boardChild);
         board.add(boardWall);
         storyboards.push(storyboard);
-        scene.add(storyboard);
-
-        boardName = "Scene "+ boardNumber;
-        boardNumber += 1;
-        labelPosition = new THREE.Vector3(pos, 13, -10);
-        pos += 50;
-
-        createLabel(boardName, labelPosition);
+        scene.add(storyboard);     
     }
 
     addStoryboard();
