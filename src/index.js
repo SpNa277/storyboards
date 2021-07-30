@@ -16,10 +16,6 @@ let scene, camera, renderer, light, controls;
 const objects = [];
 const storyboards = [];
 
-let board, boardChild, boardWall, storyboard, boardWallLabel;
-let fontWallGeometryLabel, boardWallMaterialLabel;
-let boardNumber, boardName;
-
 const LEFT = 37, RIGHT = 39, UP = 38, DOWN = 40;
 
 let transform;
@@ -82,7 +78,15 @@ let init = function(){
     scene.add( grid );
 
     // --- create Storyboard --- //
-    createStoryboard();
+     //create the text label
+     const boardWallFontLabel = new THREE.FontLoader();
+     boardWallFontLabel.load('/node_modules/three/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+       
+        createStoryboard(font);
+     });
+
+    
+
                    
     // --- add the Orbit Control, it rotates the camera and enforces the camera up direction--- // 
     controls = new OrbitControls(camera, renderer.domElement);
@@ -122,47 +126,44 @@ let init = function(){
 // ----------------------------------------------------------------------------
 //  create the Storyboard Function
 // ----------------------------------------------------------------------------
-function createStoryboard(){
+function createStoryboard(font){
     const boardGeometry = new THREE.BoxGeometry(20, 0.9, 20);
     const boardMaterial = new THREE.MeshLambertMaterial( {color: 0xeeeeee, side:THREE.DoubleSide });
     const boardGeometryChild = new THREE.BoxGeometry(19, 1, 18);
     const boardMaterialChild = new THREE.MeshLambertMaterial( {color: 0xc6c2c2, side:THREE.DoubleSide });
     const boardGeometryWall = new THREE.BoxGeometry(20, 15, 0.9); 
-
     
-    //create the text label
-    let boardWallFontLabel = new THREE.FontLoader();
-    boardWallFontLabel.load('/node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function(font){
-        fontWallGeometryLabel = new THREE.TextGeometry(boardName, {
-            font: font, 
-            size: 2, 
-            height: 0.5 
-        });
-        boardWallMaterialLabel = new THREE.MeshNormalMaterial({
-            transparent: true,
-            opacity: 0.9
-        });
+    
+    const boardWallMaterialLabel = new THREE.MeshNormalMaterial({
+        transparent: true,
+        opacity: 0.9
     });
+    
 
-    storyboard = new THREE.Group();
+    const storyboard = new THREE.Group();
 
     let addingBoard = document.getElementById("addingStoryboard");
     addingBoard.addEventListener("click", addStoryboard, false);
 
     let pos = 0;
     let posLabel = -5;
-    boardNumber = 0;
+    let boardNumber = 0;
 
-    function addStoryboard(){
-        board = new THREE.Mesh(boardGeometry, boardMaterial);
-        boardChild = new THREE.Mesh(boardGeometryChild, boardMaterialChild);
-        boardWall = new THREE.Mesh(boardGeometryWall, boardMaterial);
-        boardWallLabel = new THREE.Mesh(fontWallGeometryLabel, boardWallMaterialLabel);
-            
+    function addStoryboard(){    
+        const board = new THREE.Mesh(boardGeometry, boardMaterial);
+        const boardChild = new THREE.Mesh(boardGeometryChild, boardMaterialChild);
+        const boardWall = new THREE.Mesh(boardGeometryWall, boardMaterial);       
+
+        boardNumber += 1;
+        const boardName = 'Scene '+ boardNumber;
+        const fontWallGeometryLabel = new THREE.TextGeometry(boardName, {
+            font: font, 
+            size: 2, 
+            height: 0.5 
+        });
+        const boardWallLabel = new THREE.Mesh(fontWallGeometryLabel, boardWallMaterialLabel);
         boardWallLabel.position.set(posLabel, 15, -10);
         posLabel += 50;
-        boardName = 'Scene '+ boardNumber;
-        boardNumber += 1;
         scene.add(boardWallLabel);
 
         board.position.x = pos;
@@ -232,26 +233,26 @@ function updateLabels() {
 
 
 function createFigures(){
+
+    function spawnFigure(event, fig){
+        dropPosition.setPosition(event, renderer.domElement);
+        const pos = intersectionPosition(dropPosition, camera, storyboards); //here it depends what you want to intersect with
+        const loader = new GLTFLoader();
+        loader.load(fig.imagePath, (gltf) => {
+            const figure = gltf.scene;
+            figure.scale.set(fig.scale.x, fig.scale.y, fig.scale.z);
+            figure.position.set(pos.x, pos.y + fig.dropHeight, pos.z);
+            let labelPosition = new THREE.Vector3(pos.x, pos.y + fig.positionLabel, pos.z);
+            figure.label = createLabel(fig.name, labelPosition); //here the adding of the label to the figure
+            scene.add(figure);
+            console.log(figure);
+            objects.push(figure);
+        })
+    }
+
     for (const fig of FIGURES) {
         const element = document.getElementById(fig.domElement);
-        function spawnFigure(event){
-            dropPosition.setPosition(event, renderer.domElement);
-            const pos = intersectionPosition(dropPosition, camera, storyboards); //here it depends what you want to intersect with
-            const loader = new GLTFLoader();
-            loader.load(fig.imagePath, (gltf) => {
-                const figure = gltf.scene;
-                figure.scale.set(fig.scale.x, fig.scale.y, fig.scale.z);
-                figure.position.set(pos.x, pos.y + fig.dropHeight, pos.z);
-                let labelPosition = new THREE.Vector3(pos.x, pos.y + fig.positionLabel, pos.z);
-                figure.label = createLabel(fig.name, labelPosition); //here the adding of the label to the figure
-                scene.add(figure);
-                console.log(figure);
-                objects.push(figure);
-            })
-        }
-
-        element.addEventListener("dragend", spawnFigure, false);
-    
+        element.addEventListener("dragend", (event) => spawnFigure(event, fig), false);
     }
 }
 
