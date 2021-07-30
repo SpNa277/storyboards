@@ -323,14 +323,15 @@ let pickedObject, attachedTransform;
 function updateLabel() {
   const posFigure = pickedObject.parent.position;
   const posDelta = pickedObject.position;
+  const scale = pickedObject.parent.scale;
   // posFigure stays the same (spawn from figure)
   // posDelta - the delta of the figure from the original point
-  // for some reason it needs to be multiplied by 2
+  // it needs to be scaled
   // label.offsetY is needed that the label is placed above the figure
   pickedObject.parent.label.position = {
-    x: posFigure.x + 2 * posDelta.x,
-    y: posFigure.y + 2 * posDelta.y + pickedObject.parent.label.offsetY,
-    z: posFigure.z + 2 * posDelta.z,
+    x: posFigure.x + scale.x * posDelta.x,
+    y: posFigure.y + scale.y * posDelta.y + pickedObject.parent.label.offsetY,
+    z: posFigure.z + scale.z * posDelta.z,
   };
 }
 
