@@ -1,5 +1,4 @@
-import * as THREE from '../node_modules/three/build/three.module.js';
-
+import * as THREE from "../node_modules/three/build/three.module.js";
 
 //based on https://threejsfundamentals.org/threejs/lessons/threejs-picking.html
 //picks/selects the closest object by clicking on it and changing the color to red
@@ -15,7 +14,7 @@ export class Picker {
       this.pickedObject.material.emissive.set(0x000000);
       this.pickedObject = undefined;
     }
-    
+
     // cast a ray through the frustum
     this.raycaster.setFromCamera(normalizedPosition, camera);
     // get the list of objects the ray intersected
@@ -23,12 +22,12 @@ export class Picker {
     if (intersectedObjects.length) {
       // pick the first object. It's the closest one
       this.pickedObject = intersectedObjects[0].object;
-      // set its emissive color 
+      // set its emissive color
       this.pickedObject.material.emissive.set(0x901e1e);
     }
   }
 }
-  
+
 //to track the position of the mouse
 export class PickPosition {
   constructor() {
@@ -56,18 +55,18 @@ function getCanvasRelativePosition(event, domElement) {
   return {
     x: ((event.clientX - rect.left) * domElement.width) / rect.width,
     y: ((event.clientY - rect.top) * domElement.height) / rect.height,
-  };  
+  };
 }
 
-export function intersectionPosition(normalizedPosition, camera, objects){
+export function intersectionPosition(normalizedPosition, camera, objects) {
   const raycaster = new THREE.Raycaster();
 
   raycaster.setFromCamera(normalizedPosition, camera); //updates the ray with a new origin and direction.
-    // get the list of objects the ray intersected
-    const intersectedObjects = raycaster.intersectObjects(objects, true);
-    if (intersectedObjects.length) {
-      return intersectedObjects[0].point;
-    }
+  // get the list of objects the ray intersected
+  const intersectedObjects = raycaster.intersectObjects(objects, true);
+  if (intersectedObjects.length) {
+    return intersectedObjects[0].point;
+  }
 
-    return undefined;
+  return undefined;
 }
