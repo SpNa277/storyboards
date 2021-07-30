@@ -95,6 +95,7 @@ let init = function(){
 
     // --- add the transform Controls, it makes it possible to move, rotate and scale the objects --- //
     transform = new TransformControls(camera, renderer.domElement);
+    transform.addEventListener("objectChange", updateLabel);
     transform.addEventListener('dragging-changed', function(event){
         controls.enabled =! event.value;
     });
@@ -211,7 +212,7 @@ function createLabel(text, position){
 
 
 const labelPos = new THREE.Vector3();
-function updateLabels() {
+function renderLabels() {
     for (const label of labels) {
       // get the normalized screen coordinate of that position
       // x and y will be in the -1 to +1 range with x = -1 being
@@ -237,6 +238,12 @@ function createFigures(){
     function spawnFigure(event, fig){
         dropPosition.setPosition(event, renderer.domElement);
         const pos = intersectionPosition(dropPosition, camera, storyboards); //here it depends what you want to intersect with
+        
+        // figures can be positioned just on the storyboard. In this case the user didn't drop the figure on the storyboard. 
+        if (pos === undefined) {
+            return;
+        }
+
         const loader = new GLTFLoader();
         loader.load(fig.imagePath, (gltf) => {
             const figure = gltf.scene;
@@ -244,6 +251,7 @@ function createFigures(){
             figure.position.set(pos.x, pos.y + fig.dropHeight, pos.z);
             let labelPosition = new THREE.Vector3(pos.x, pos.y + fig.positionLabel, pos.z);
             figure.label = createLabel(fig.name, labelPosition); //here the adding of the label to the figure
+            figure.label.offsetY = labelPosition.y - figure.position.y;
             scene.add(figure);
             console.log(figure);
             objects.push(figure);
@@ -306,6 +314,20 @@ function resizeRendererToDisplaySize(renderer) {
 // ----------------------------------------------------------------------------
 let pickedObject, attachedTransform;
 
+function updateLabel(){
+    const posFigure = pickedObject.parent.position; 
+    const posDelta = pickedObject.position;
+    // posFigure stays the same (spawn from figure)
+    // posDelta - the delta of the figure from the original point
+    // for some reason it needs to be multiplied by 2
+    // label.offsetY is needed that the label is placed above the figure  
+    pickedObject.parent.label.position = {
+        x: posFigure.x + 2 * posDelta.x,
+        y: posFigure.y + 2 * posDelta.y + pickedObject.parent.label.offsetY,
+        z: posFigure.z + 2 * posDelta.z,
+    }
+}
+
 function render() {
     controls.update();
     stats.update();
@@ -327,7 +349,7 @@ function render() {
         camera.aspect = canvas.clientWidth / canvas.clientHeight;
         camera.updateProjectionMatrix();
     }
-    updateLabels();
+    renderLabels();
     requestAnimationFrame(render);
 }
 
