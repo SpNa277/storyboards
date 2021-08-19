@@ -147,7 +147,7 @@ function createStoryboard(font) {
 
   const storyboard = new THREE.Group();
 
-  let addingBoard = document.getElementById("addingStoryboard");
+  const addingBoard = document.getElementById("addingStoryboard");
   addingBoard.addEventListener("click", addStoryboard, false);
 
   let pos = 0;
@@ -178,6 +178,40 @@ function createStoryboard(font) {
     pos += 50;
     boardWall.position.y = 7;
     boardWall.position.z = -10;
+
+    const addingBoardHome = document.getElementById("homeButton");
+    addingBoardHome.addEventListener("click", createHome, false);
+
+    function createHome() {
+      const loaderHome = new GLTFLoader();
+      loaderHome.load("../img/home.glb", (gltf) => {
+        const home = gltf.scene;
+        home.position.set(
+          board.position.x,
+          boardWall.position.y,
+          boardWall.position.z + 0.5
+        );
+        home.scale.set(10, 10, 10);
+        scene.add(home);
+      });
+    }
+
+    const addingBoardKitchen = document.getElementById("kitchenButton");
+    addingBoardKitchen.addEventListener("click", createKitchen, false);
+
+    function createKitchen() {
+      const loaderKitchen = new GLTFLoader();
+      loaderKitchen.load("../img/kitchen.glb", (gltf) => {
+        const kitchen = gltf.scene;
+        kitchen.position.set(
+          board.position.x,
+          boardWall.position.y,
+          boardWall.position.z + 0.5
+        );
+        kitchen.scale.set(10, 10, 10);
+        scene.add(kitchen);
+      });
+    }
 
     storyboard.add(board);
     board.add(boardChild);
