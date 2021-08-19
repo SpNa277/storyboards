@@ -39,9 +39,15 @@ export function generateXML(figures) {
   doc.appendChild(adoxml);
 
   const models = doc.createElement("MODELS");
+
+  let i = 0;
+  // *********************************************TO DO********************************************************
+  //should take all the figures which have a position smaller than 50, then smaller than 100, etc.
+  //for (let y = 50; i < y; y += 50) {
+  //i += 1;
   const model = doc.createElement("MODEL");
-  model.setAttribute("id", ID);
-  model.setAttribute("name", SCENE_NAME);
+  model.setAttribute("id", `${ID}_${i}`);
+  model.setAttribute("name", `${SCENE_NAME} ${i}`);
   model.setAttribute("version", "");
   model.setAttribute("modeltype", "Scene");
   model.setAttribute("libtype", "bp");
@@ -51,7 +57,6 @@ export function generateXML(figures) {
   const modelattributes = doc.createElement("MODELATTRIBUTES");
   model.appendChild(modelattributes);
 
-  let i = 0;
   for (const figure of figures) {
     i += 1;
     const instance = doc.createElement("INSTANCE");
@@ -61,8 +66,9 @@ export function generateXML(figures) {
     const position = doc.createElement("ATTRIBUTE");
     position.setAttribute("name", "Position");
     position.setAttribute("type", "STRING");
-    // TODO: set the position of each figure
-    position.textContent = `NODE x:${figure.position.x}cm y:${figure.position.y}cm w:5.8cm h:4.9cm index:1`;
+    position.textContent = `NODE x:${2 * figure.position.x}cm y:${
+      4 * figure.position.y + 0.4 * figure.position.z
+    }cm w:${figure.scale.x}cm h:${figure.scale.y}cm index:1`;
     instance.appendChild(position);
 
     const type = doc.createElement("ATTRIBUTE");
@@ -72,8 +78,10 @@ export function generateXML(figures) {
     instance.appendChild(type);
 
     model.appendChild(instance);
+    //}
+
+    models.appendChild(model);
   }
-  models.appendChild(model);
   adoxml.appendChild(models);
 
   return doc;

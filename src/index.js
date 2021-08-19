@@ -57,9 +57,6 @@ let init = function () {
   light = new THREE.AmbientLight(0xffffff);
   scene.add(light);
 
-  let axesHelper = new THREE.AxesHelper(1000);
-  scene.add(axesHelper);
-
   // --- create the renderer --- //
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setClearColor(0x000000, 0.0);
@@ -81,7 +78,7 @@ let init = function () {
   //create the text label
   const boardWallFontLabel = new THREE.FontLoader();
   boardWallFontLabel.load(
-    "/node_modules/three/examples/fonts/helvetiker_regular.typeface.json",
+    "/node_modules/three/examples/fonts/gentilis_regular.typeface.json",
     (font) => {
       createStoryboard(font);
     }
@@ -140,10 +137,7 @@ function createStoryboard(font) {
   });
   const boardGeometryWall = new THREE.BoxGeometry(20, 15, 0.9);
 
-  const boardWallMaterialLabel = new THREE.MeshNormalMaterial({
-    transparent: true,
-    opacity: 0.9,
-  });
+  const boardWallMaterialLabel = new THREE.MeshNormalMaterial();
 
   const storyboard = new THREE.Group();
 
@@ -235,6 +229,7 @@ function exportXML() {
     class: obj.label.class,
     type: obj.label.type,
     position: obj.position,
+    scale: obj.scale,
   }));
   exportFigures(figures);
 }
@@ -338,8 +333,8 @@ function onWindowResize() {
 function onKeyDown(event) {
   if (event.keyCode == LEFT) scene.position.x += 2;
   else if (event.keyCode == RIGHT) scene.position.x -= 2;
-  else if (event.keyCode == UP) scene.position.z += 2;
-  else if (event.keyCode == DOWN) scene.position.z -= 2;
+  else if (event.keyCode == UP) scene.position.y -= 2;
+  else if (event.keyCode == DOWN) scene.position.y += 2;
   else return;
 }
 
@@ -377,6 +372,11 @@ function updateLabel() {
   };
 }
 
+//TO DO --- delete/remove pickedObject
+/*function removePickedObject(event) {
+  if (event.keyCode == d) scene.remove(pickedObject);
+}*/
+
 function render() {
   controls.update();
   stats.update();
@@ -392,6 +392,8 @@ function render() {
 
     transform.attach(pickedObject);
     attachedTransform = true;
+
+    window.key;
   }
   if (resizeRendererToDisplaySize(renderer)) {
     const canvas = renderer.domElement;
