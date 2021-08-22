@@ -80,6 +80,10 @@ body {
   width: 100px;
   height: 100px;
 }
+.img3 {
+  width: 150px;
+  height: 100px;
+}
 
 #moveObjects {
   position: absolute;
