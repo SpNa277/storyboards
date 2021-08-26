@@ -39,7 +39,7 @@ export const FIGURES = [
     dropHeight: 1,
     positionLabel: 3,
     class: "Character",
-    type: "Old_man",
+    type: "Old_man_01",
   },
   {
     name: "Girl",
@@ -53,10 +53,10 @@ export const FIGURES = [
     dropHeight: 1,
     positionLabel: 3,
     class: "Character",
-    type: "Girl",
+    type: "Woman_02",
   },
   {
-    name: "Schoolboy",
+    name: "Student",
     domElement: "schoolboy",
     imagePath: "./img/schoolboy.glb",
     scale: {
@@ -67,10 +67,10 @@ export const FIGURES = [
     dropHeight: 1,
     positionLabel: 3,
     class: "Character",
-    type: "Schoolboy",
+    type: "Student",
   },
   {
-    name: "Mechanic",
+    name: "Worker",
     domElement: "mechanic",
     imagePath: "./img/mechanic.glb",
     scale: {
@@ -81,7 +81,7 @@ export const FIGURES = [
     dropHeight: 1,
     positionLabel: 3,
     class: "Character",
-    type: "Mechanic",
+    type: "Worker",
   },
   {
     name: "Speech Bubble",
@@ -94,11 +94,11 @@ export const FIGURES = [
     },
     dropHeight: 1,
     positionLabel: 3,
-    class: "Speech Bubble",
-    type: "bubble",
+    class: "Speech_Bubble",
+    type: "Speech_Bubble",
   },
   {
-    name: "Speech Bubble 2",
+    name: "Crying Bubble",
     domElement: "speechbubble2",
     imagePath: "./img/speech_bubble_2.glb",
     scale: {
@@ -108,11 +108,11 @@ export const FIGURES = [
     },
     dropHeight: 1,
     positionLabel: 3,
-    class: "Speech Bubble",
-    type: "bubble2",
+    class: "Speech_Bubble",
+    type: "Crying_Bubble",
   },
   {
-    name: "Thought",
+    name: "Thinking Bubble",
     domElement: "thought",
     imagePath: "./img/thought.glb",
     scale: {
@@ -122,8 +122,8 @@ export const FIGURES = [
     },
     dropHeight: 1,
     positionLabel: 3,
-    class: "Speech Bubble",
-    type: "thought",
+    class: "Speech_Bubble",
+    type: "Thinking_Bubble",
   },
   {
     name: "Arrow Up",
@@ -136,8 +136,8 @@ export const FIGURES = [
     },
     dropHeight: 1,
     positionLabel: 3,
-    class: "Arrows",
-    type: "arrow_up",
+    class: "Arrow",
+    type: "Up",
   },
   {
     name: "Arrow Down",
@@ -150,8 +150,8 @@ export const FIGURES = [
     },
     dropHeight: 1,
     positionLabel: 3,
-    class: "Arrows",
-    type: "arrow_down",
+    class: "Arrow",
+    type: "Down",
   },
   {
     name: "Arrow Right",
@@ -164,8 +164,8 @@ export const FIGURES = [
     },
     dropHeight: 1,
     positionLabel: 3,
-    class: "Arrows",
-    type: "arrow_right",
+    class: "Arrow",
+    type: "Right",
   },
   {
     name: "Arrow Left",
@@ -178,8 +178,8 @@ export const FIGURES = [
     },
     dropHeight: 1,
     positionLabel: 3,
-    class: "Arrows",
-    type: "arrow_left",
+    class: "Arrow",
+    type: "Left",
   },
   {
     name: "Sign",
@@ -192,11 +192,11 @@ export const FIGURES = [
     },
     dropHeight: 1,
     positionLabel: 3,
-    class: "Signs",
-    type: "sign",
+    class: "Sign",
+    type: "Small_Sign",
   },
   {
-    name: "Signs",
+    name: "Direction Sign",
     domElement: "signs",
     imagePath: "./img/signs.glb",
     scale: {
@@ -206,8 +206,8 @@ export const FIGURES = [
     },
     dropHeight: 1,
     positionLabel: 3,
-    class: "Signs",
-    type: "signs",
+    class: "Sign",
+    type: "Direction_Sign",
   },
   {
     name: "Table",
@@ -235,7 +235,7 @@ export const FIGURES = [
     dropHeight: 0.5,
     positionLabel: 3,
     class: "Furniture",
-    type: "Desk",
+    type: "Laptop_Setting_01",
   },
   {
     name: "Flipchart",
@@ -277,10 +277,10 @@ export const FIGURES = [
     dropHeight: 0.5,
     positionLabel: 3,
     class: "Device",
-    type: "Phone",
+    type: "Mobile_Phone",
   },
   {
-    name: "Bicycle",
+    name: "Bike",
     domElement: "bicycle",
     imagePath: "./img/bicycle.glb",
     scale: {
@@ -364,7 +364,7 @@ export const FIGURES = [
     type: "House",
   },
   {
-    name: "Building",
+    name: "Tower",
     domElement: "building",
     imagePath: "./img/building.glb",
     scale: {
@@ -375,7 +375,7 @@ export const FIGURES = [
     dropHeight: 2.5,
     positionLabel: 6.5,
     class: "Building",
-    type: "Building",
+    type: "Tower_Building",
   },
   {
     name: "Office",
@@ -389,7 +389,7 @@ export const FIGURES = [
     dropHeight: 2.5,
     positionLabel: 6.5,
     class: "Building",
-    type: "Office",
+    type: "Office_Building",
   },
   {
     name: "Factory",
@@ -406,7 +406,7 @@ export const FIGURES = [
     type: "Factory",
   },
   {
-    name: "Station",
+    name: "Train Station",
     domElement: "station",
     imagePath: "./img/station.glb",
     scale: {
@@ -417,7 +417,7 @@ export const FIGURES = [
     dropHeight: 2.5,
     positionLabel: 6.5,
     class: "Building",
-    type: "Station",
+    type: "Train_Station",
   },
   {
     name: "Meeting Room",
@@ -445,10 +445,10 @@ export const FIGURES = [
     dropHeight: 3,
     positionLabel: 7,
     class: "Background",
-    type: "Coffee_Corner_01",
+    type: "Coffee_Corner",
   },
   {
-    name: "Home",
+    name: "Countryside",
     domElement: "homeButton",
     imagePath: "./img/home.glb",
     scale: {
@@ -459,7 +459,7 @@ export const FIGURES = [
     dropHeight: 3,
     positionLabel: 7,
     class: "Background",
-    type: "Home_01",
+    type: "Countryside",
   },
   {
     name: "Kitchen",
@@ -473,7 +473,7 @@ export const FIGURES = [
     dropHeight: 3,
     positionLabel: 7,
     class: "Background",
-    type: "Kitchen_01",
+    type: "Kitchen",
   },
   {
     name: "Office Room",
@@ -487,6 +487,6 @@ export const FIGURES = [
     dropHeight: 3,
     positionLabel: 7,
     class: "Background",
-    type: "Office_Room_01",
+    type: "Office",
   },
 ];
