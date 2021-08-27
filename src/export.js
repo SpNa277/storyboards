@@ -68,7 +68,9 @@ export function generateXML(scenes) {
       // scale coordinates to A4 (210mm x 297mm)
       position.textContent = `NODE x:${21 * figure.position.x}cm y:${
         29.7 * (1 - figure.position.y)
-      }cm w:${figure.scale.x}cm h:${figure.scale.y}cm index:1`;
+      }cm w:${figure.scale.x}cm h:${figure.scale.y}cm index:${
+        figure.zIndex === undefined ? 1 : figure.zIndex
+      }`;
       instance.appendChild(position);
 
       const type = doc.createElement("ATTRIBUTE");

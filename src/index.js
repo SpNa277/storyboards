@@ -180,7 +180,12 @@ function createStoryboard(font) {
           boardWall.position.y + 7 / bg.scale.y,
           boardWall.position.z + 0.5
         );
-        scene.add(background);
+        background.label = {
+          name: bg.name,
+          class: bg.class,
+          type: bg.type,
+        };
+        storyboard.add(background);
       });
     }
     storyboard.add(board);
@@ -242,8 +247,8 @@ function exportXML() {
 // sorts the figures to the corresponding storyboard if there are within the boundaries of the storyboard,
 // and normalize coordinates between 0 and 1.
 function assignFiguresToStoryboard(figures) {
-  return storyboards.map((storyboard) =>
-    figures
+  return storyboards.map((storyboard) => {
+    const figs = figures
       .filter(
         (fig) =>
           fig.position.x >= storyboard.bounds.xStart &&
@@ -266,8 +271,30 @@ function assignFiguresToStoryboard(figures) {
             (fig.position.z - storyboard.bounds.zStart) /
             (storyboard.bounds.zEnd - storyboard.bounds.zStart),
         },
-      }))
-  );
+      }));
+    if (storyboard.children.length > 1) {
+      const bg = storyboard.children[storyboard.children.length - 1];
+      figs.push({
+        name: bg.label.name,
+        class: bg.label.class,
+        type: bg.label.type,
+        position: {
+          x:
+            (bg.position.x - storyboard.bounds.xStart) /
+            (storyboard.bounds.xEnd - storyboard.bounds.xStart),
+          y:
+            (bg.position.y - storyboard.bounds.yStart) /
+            (storyboard.bounds.yEnd - storyboard.bounds.yStart),
+          z:
+            (bg.position.z - storyboard.bounds.zStart) /
+            (storyboard.bounds.zEnd - storyboard.bounds.zStart),
+        },
+        scale: bg.scale,
+        zIndex: 0,
+      });
+    }
+    return figs;
+  });
 }
 
 // ----------------------------------------------------------------------------
