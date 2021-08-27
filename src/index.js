@@ -140,13 +140,12 @@ function createStoryboard(font) {
 
   const boardWallMaterialLabel = new THREE.MeshNormalMaterial();
 
-  const storyboard = new THREE.Group();
-
   let pos = 0;
   let posLabel = -5;
   let boardNumber = 0;
 
   function addStoryboard(bg) {
+    const storyboard = new THREE.Group();
     const board = new THREE.Mesh(boardGeometry, boardMaterial);
     const boardChild = new THREE.Mesh(boardGeometryChild, boardMaterialChild);
     const boardWall = new THREE.Mesh(boardGeometryWall, boardMaterial);
@@ -187,6 +186,15 @@ function createStoryboard(font) {
     storyboard.add(board);
     board.add(boardChild);
     board.add(boardWall);
+    // gives the boundaries from the storyboard
+    storyboard.bounds = {
+      xStart: board.position.x - 10,
+      xEnd: board.position.x + 10,
+      yStart: 0,
+      yEnd: 15,
+      zStart: -10,
+      zEnd: 10,
+    };
     storyboards.push(storyboard);
     scene.add(storyboard);
   }
@@ -209,14 +217,57 @@ const exportButton = document.getElementById("export");
 exportButton.addEventListener("click", exportXML, false);
 
 function exportXML() {
-  const figures = objects.map((obj) => ({
-    name: obj.label.name,
-    class: obj.label.class,
-    type: obj.label.type,
-    position: obj.position,
-    scale: obj.scale,
-  }));
-  exportFigures(figures);
+  const figures = objects.map((obj) => {
+    // transformControls contains the offset from the original position,
+    // it is supposedly always the last child.
+    const transformMesh = obj.children[obj.children.length - 1];
+    const posFigure = obj.position;
+    const posDelta = transformMesh.position;
+    return {
+      name: obj.label.name,
+      class: obj.label.class,
+      type: obj.label.type,
+      position: {
+        x: posFigure.x + obj.scale.x * posDelta.x,
+        y: posFigure.y + obj.scale.y * posDelta.y,
+        z: posFigure.z + obj.scale.z * posDelta.z,
+      },
+      scale: obj.scale,
+    };
+  });
+  const normalizedFigures = assignFiguresToStoryboard(figures);
+  exportFigures(normalizedFigures);
+}
+
+// sorts the figures to the corresponding storyboard if there are within the boundaries of the storyboard,
+// and normalize coordinates between 0 and 1.
+function assignFiguresToStoryboard(figures) {
+  return storyboards.map((storyboard) =>
+    figures
+      .filter(
+        (fig) =>
+          fig.position.x >= storyboard.bounds.xStart &&
+          fig.position.x <= storyboard.bounds.xEnd &&
+          fig.position.y >= storyboard.bounds.yStart &&
+          fig.position.y <= storyboard.bounds.yEnd &&
+          fig.position.z >= storyboard.bounds.zStart &&
+          fig.position.z <= storyboard.bounds.zEnd
+      )
+      .map((fig) => ({
+        ...fig,
+        position: {
+          x:
+            (fig.position.x - storyboard.bounds.xStart) /
+            (storyboard.bounds.xEnd - storyboard.bounds.xStart),
+          y:
+            (fig.position.y - storyboard.bounds.yStart) /
+            (storyboard.bounds.yEnd - storyboard.bounds.yStart),
+          z:
+            (fig.position.z - storyboard.bounds.zStart) /
+            (storyboard.bounds.zEnd - storyboard.bounds.zStart),
+        },
+      }))
+  );
 }
 
 // ----------------------------------------------------------------------------
