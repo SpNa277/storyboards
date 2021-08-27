@@ -15,11 +15,6 @@ let scene, camera, renderer, light, controls;
 const objects = [];
 const storyboards = [];
 
-const LEFT = 37,
-  RIGHT = 39,
-  UP = 38,
-  DOWN = 40;
-
 let transform;
 
 window.requestAnimationFrame(render);
@@ -87,6 +82,8 @@ let init = function () {
   // --- add the Orbit Control, it rotates the camera and enforces the camera up direction--- //
   controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 1.6, 0);
+  controls.listenToKeyEvents(window);
+  controls.keyPanSpeed = 30;
   controls.update();
 
   // --- add the transform Controls, it makes it possible to move, rotate and scale the objects --- //
@@ -113,7 +110,6 @@ let init = function () {
   });
 
   // --- add event listener --- //
-  document.addEventListener("keydown", onKeyDown, false);
   window.addEventListener("click", (event) =>
     pickPosition.setPosition(event, renderer.domElement)
   );
@@ -325,17 +321,6 @@ function onWindowResize() {
   camera.updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-// ----------------------------------------------------------------------------
-//  onKeyDown Function - to move around the scene
-// ----------------------------------------------------------------------------
-function onKeyDown(event) {
-  if (event.keyCode == LEFT) scene.position.x += 2;
-  else if (event.keyCode == RIGHT) scene.position.x -= 2;
-  else if (event.keyCode == UP) scene.position.y -= 2;
-  else if (event.keyCode == DOWN) scene.position.y += 2;
-  else return;
 }
 
 // ----------------------------------------------------------------------------
