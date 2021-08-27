@@ -4,7 +4,7 @@ import { OrbitControls } from "../node_modules/three/examples/jsm/controls/Orbit
 import { TransformControls } from "../node_modules/three/examples/jsm/controls/TransformControls.js";
 import { Picker, PickPosition, intersectionPosition } from "./picker.js";
 import Stats from "../node_modules/three/examples/jsm/libs/stats.module.js";
-import { FIGURES } from "./figure.js";
+import { BACKGROUNDS, FIGURES } from "./figure.js";
 import { exportFigures } from "./export.js";
 
 // ----------------------------------------------------------------------------
@@ -142,14 +142,11 @@ function createStoryboard(font) {
 
   const storyboard = new THREE.Group();
 
-  const addingBoard = document.getElementById("addingStoryboard");
-  addingBoard.addEventListener("click", addStoryboard, false);
-
   let pos = 0;
   let posLabel = -5;
   let boardNumber = 0;
 
-  function addStoryboard() {
+  function addStoryboard(bg) {
     const board = new THREE.Mesh(boardGeometry, boardMaterial);
     const boardChild = new THREE.Mesh(boardGeometryChild, boardMaterialChild);
     const boardWall = new THREE.Mesh(boardGeometryWall, boardMaterial);
@@ -174,45 +171,32 @@ function createStoryboard(font) {
     boardWall.position.y = 7;
     boardWall.position.z = -10;
 
-    const addingBoardHome = document.getElementById("homeButton");
-    addingBoardHome.addEventListener("click", createHome, false);
-
-    function createHome() {
-      const loaderHome = new GLTFLoader();
-      loaderHome.load("../img/home.glb", (gltf) => {
-        const home = gltf.scene;
-        home.position.set(
+    if (bg) {
+      const loader = new GLTFLoader();
+      loader.load(bg.imagePath, (gltf) => {
+        const background = gltf.scene;
+        background.scale.set(bg.scale.x, bg.scale.y, bg.scale.z);
+        background.position.set(
           board.position.x,
-          boardWall.position.y,
+          boardWall.position.y + 7 / bg.scale.y,
           boardWall.position.z + 0.5
         );
-        home.scale.set(10, 10, 10);
-        scene.add(home);
+        scene.add(background);
       });
     }
-
-    const addingBoardKitchen = document.getElementById("kitchenButton");
-    addingBoardKitchen.addEventListener("click", createKitchen, false);
-
-    function createKitchen() {
-      const loaderKitchen = new GLTFLoader();
-      loaderKitchen.load("../img/kitchen.glb", (gltf) => {
-        const kitchen = gltf.scene;
-        kitchen.position.set(
-          board.position.x,
-          boardWall.position.y,
-          boardWall.position.z + 0.5
-        );
-        kitchen.scale.set(10, 10, 10);
-        scene.add(kitchen);
-      });
-    }
-
     storyboard.add(board);
     board.add(boardChild);
     board.add(boardWall);
     storyboards.push(storyboard);
     scene.add(storyboard);
+  }
+
+  const element = document.getElementById("bgEmpty");
+  element.addEventListener("click", () => addStoryboard(), false);
+
+  for (const bg of BACKGROUNDS) {
+    const element = document.getElementById(bg.domElement);
+    element.addEventListener("click", () => addStoryboard(bg), false);
   }
 
   addStoryboard();

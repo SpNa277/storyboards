@@ -419,14 +419,17 @@ export const FIGURES = [
     class: "Building",
     type: "Train_Station",
   },
+];
+
+export const BACKGROUNDS = [
   {
     name: "Meeting Room",
     domElement: "meetingroom",
     imagePath: "./img/meeting_room.glb",
     scale: {
-      x: 6,
-      y: 6,
-      z: 6,
+      x: 13.6,
+      y: 14.2,
+      z: 1,
     },
     dropHeight: 3,
     positionLabel: 7,
@@ -438,9 +441,9 @@ export const FIGURES = [
     domElement: "coffeecorner",
     imagePath: "./img/coffee_corner.glb",
     scale: {
-      x: 6,
-      y: 6,
-      z: 6,
+      x: 14,
+      y: 14,
+      z: 14,
     },
     dropHeight: 3,
     positionLabel: 7,
@@ -452,9 +455,9 @@ export const FIGURES = [
     domElement: "homeButton",
     imagePath: "./img/home.glb",
     scale: {
-      x: 6,
-      y: 6,
-      z: 6,
+      x: 14,
+      y: 14,
+      z: 14,
     },
     dropHeight: 3,
     positionLabel: 7,
@@ -466,9 +469,9 @@ export const FIGURES = [
     domElement: "kitchenButton",
     imagePath: "./img/kitchen.glb",
     scale: {
-      x: 6,
-      y: 6,
-      z: 6,
+      x: 14,
+      y: 14,
+      z: 14,
     },
     dropHeight: 3,
     positionLabel: 7,
@@ -480,9 +483,9 @@ export const FIGURES = [
     domElement: "officeroom",
     imagePath: "./img/office_room.glb",
     scale: {
-      x: 6,
-      y: 6,
-      z: 6,
+      x: 14,
+      y: 14,
+      z: 14,
     },
     dropHeight: 3,
     positionLabel: 7,
