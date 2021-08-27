@@ -115,6 +115,11 @@ let init = function () {
   );
   window.addEventListener("mouseout", () => pickPosition.reset());
   window.addEventListener("mouseleave", () => pickPosition.reset());
+  window.addEventListener("click", (event) => {
+    if (document.activeElement !== event.target) {
+      document.activeElement.blur();
+    }
+  });
 };
 
 // ----------------------------------------------------------------------------
@@ -246,6 +251,7 @@ function createLabel(fig, position) {
   };
   label.elem.innerHTML = label.name;
   label.elem.classList.add("label");
+  label.elem.setAttribute("contenteditable", true);
   labelContainer.appendChild(label.elem);
   labels.push(label);
   return label;

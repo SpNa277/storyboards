@@ -98,7 +98,6 @@ body {
   left: 0; /* make our position the top left of the container */
   top: 0;
   color: rgb(230, 28, 28);
-  pointer-events: none;
 }
 
 .label {
