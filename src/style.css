@@ -101,6 +101,10 @@ body {
   pointer-events: none;
 }
 
+.label {
+  width: fit-content;
+}
+
 #export {
   border: white;
   background-color: grey;

@@ -245,6 +245,7 @@ function createLabel(fig, position) {
     elem: document.createElement("div"),
   };
   label.elem.innerHTML = label.name;
+  label.elem.classList.add("label");
   labelContainer.appendChild(label.elem);
   labels.push(label);
   return label;
