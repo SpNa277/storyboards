@@ -162,11 +162,11 @@ function createStoryboard(font) {
       boardWallMaterialLabel
     );
     boardWallLabel.position.set(posLabel, 15, -10);
-    posLabel += 50;
+    posLabel += 30;
     scene.add(boardWallLabel);
 
     board.position.x = pos;
-    pos += 50;
+    pos += 30;
     boardWall.position.y = 7;
     boardWall.position.z = -10;
 
@@ -178,7 +178,7 @@ function createStoryboard(font) {
         background.position.set(
           board.position.x,
           boardWall.position.y + 7 / bg.scale.y,
-          boardWall.position.z + 0.5
+          boardWall.position.z + 0.455
         );
         background.label = {
           name: bg.name,

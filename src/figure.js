@@ -492,4 +492,18 @@ export const BACKGROUNDS = [
     class: "Background",
     type: "Office",
   },
+  {
+    name: "City",
+    domElement: "city",
+    imagePath: "./img/village.glb",
+    scale: {
+      x: 13.6,
+      y: 14,
+      z: 14,
+    },
+    dropHeight: 3,
+    positionLabel: 7,
+    class: "Background",
+    type: "City",
+  },
 ];
