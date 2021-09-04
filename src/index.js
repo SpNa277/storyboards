@@ -122,6 +122,7 @@ let init = function () {
     if (document.activeElement !== event.target) {
       document.activeElement.blur();
     }
+    controls.enablePan = !event.target.isContentEditable;
   });
 };
 
