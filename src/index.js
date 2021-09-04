@@ -95,7 +95,10 @@ let init = function () {
 
   scene.add(transform);
 
-  window.addEventListener("keydown", function (event) {
+  window.addEventListener("keydown", (event) => {
+    if (document.activeElement.isContentEditable) {
+      return;
+    }
     switch (event.key) {
       case "g":
         transform.setMode("translate");
