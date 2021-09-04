@@ -22,7 +22,7 @@ socket.on("id", (id) => {
 let scene, camera, renderer, light, controls;
 
 let objects = [];
-const storyboards = [];
+let storyboards = [];
 
 let transform;
 
@@ -191,7 +191,7 @@ function createStoryboard(font) {
     );
     boardWallLabel.position.set(posLabel, 15, -10);
     posLabel += 30;
-    scene.add(boardWallLabel);
+    storyboard.add(boardWallLabel);
 
     board.position.x = pos;
     pos += 30;
@@ -268,8 +268,30 @@ function createStoryboard(font) {
     }
   });
 
-  addStoryboard();
+  socket.on("deleteAllStoryboards", deleteAllStoryboards);
 
+  const deleteAllStoryboardsButton = document.getElementById("deleteAll");
+  deleteAllStoryboardsButton.addEventListener(
+    "click",
+    () => {
+      deleteAllStoryboards();
+      socket.emit("deleteHistory");
+    },
+    false
+  );
+
+  function deleteAllStoryboards() {
+    for (const storyboard of storyboards) {
+      scene.remove(storyboard);
+    }
+    storyboards = [];
+    pos = 0;
+    posLabel = -5;
+    boardNumber = 0;
+    addStoryboard();
+  }
+
+  addStoryboard();
   socket.emit("requestHistory");
 }
 

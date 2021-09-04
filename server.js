@@ -13,7 +13,7 @@ const server = app.listen(port, () => {
 
 const io = new Server(server);
 
-const historyStoryboard = [];
+let historyStoryboard = [];
 io.on("connection", (client) => {
   console.log(
     "User " +
@@ -29,6 +29,11 @@ io.on("connection", (client) => {
   client.on("addStoryboard", (senderId, bg) => {
     io.sockets.emit("addStoryboard", senderId, bg);
     historyStoryboard.push(bg);
+  });
+
+  client.on("deleteHistory", () => {
+    historyStoryboard = [];
+    io.sockets.emit("deleteAllStoryboards");
   });
 
   client.on("requestHistory", () => {
