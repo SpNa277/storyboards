@@ -119,22 +119,17 @@ let init = function () {
         transform.setMode("scale");
         break;
       case "Delete":
-      case "Backspace":
-        deleteFigure();
+      case "Backspace": {
+        if (pickedObject === undefined) {
+          break;
+        }
+        const index = objects.indexOf(pickedObject.parent);
+        deleteFigure(index);
+        socket.emit("deleteFigure", clientId, index);
         break;
+      }
     }
   });
-
-  function deleteFigure() {
-    if (pickedObject === undefined) {
-      return;
-    }
-    objects = objects.filter((obj) => obj !== pickedObject.parent);
-    scene.remove(pickedObject.parent);
-    // delete label
-    pickedObject.parent.label.elem.remove();
-    transform.detach();
-  }
 
   // --- add event listener --- //
   window.addEventListener("click", (event) =>
@@ -457,6 +452,13 @@ function createFigures() {
     }
   });
 
+  socket.on("deleteFigure", (senderId, index) => {
+    if (clientId === senderId) {
+      return;
+    }
+    deleteFigure(index);
+  });
+
   for (const fig of FIGURES) {
     const element = document.getElementById(fig.domElement);
     element.addEventListener(
@@ -471,6 +473,16 @@ function createFigures() {
     );
   }
   socket.emit("requestHistoryFigures");
+}
+
+function deleteFigure(index) {
+  const obj = objects[index];
+  objects = objects.filter((_, objIndex) => index !== objIndex);
+  scene.remove(obj);
+  obj.label.elem.remove();
+  if (transform.object.parent === obj) {
+    transform.detach();
+  }
 }
 
 createFigures();

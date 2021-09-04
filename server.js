@@ -46,6 +46,13 @@ io.on("connection", (client) => {
     historyFigures.push({ pos, fig });
   });
 
+  client.on("deleteFigure", (senderId, index) => {
+    io.sockets.emit("deleteFigure", senderId, index);
+    historyFigures = historyFigures.filter(
+      (_, historyIndex) => index !== historyIndex
+    );
+  });
+
   client.on("requestHistoryFigures", () => {
     client.emit("historyFigures", historyFigures);
   });
