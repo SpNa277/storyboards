@@ -57,5 +57,11 @@ io.on("connection", (client) => {
     client.emit("historyFigures", historyFigures);
   });
 
+  client.on("updatePosition", (senderId, index, pos) => {
+    io.sockets.emit("updatePosition", senderId, index, pos);
+    const obj = historyFigures[index];
+    obj.fig.posOffset = pos;
+  });
+
   client.emit("id", client.id);
 });

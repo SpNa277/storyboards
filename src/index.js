@@ -97,7 +97,14 @@ let init = function () {
 
   // --- add the transform Controls, it makes it possible to move, rotate and scale the objects --- //
   transform = new TransformControls(camera, renderer.domElement);
-  transform.addEventListener("objectChange", updateLabel);
+  transform.addEventListener("objectChange", () => {
+    updateLabel(pickedObject);
+  });
+  transform.addEventListener("mouseUp", () => {
+    const index = objects.indexOf(transform.object.parent);
+    const pos = transform.object.position;
+    socket.emit("updatePosition", clientId, index, pos);
+  });
   transform.addEventListener("dragging-changed", function (event) {
     controls.enabled = !event.value;
   });
@@ -426,7 +433,7 @@ function createFigures() {
       const figure = gltf.scene;
       figure.scale.set(fig.scale.x, fig.scale.y, fig.scale.z);
       figure.position.set(pos.x, pos.y + fig.dropHeight, pos.z);
-      let labelPosition = new THREE.Vector3(
+      const labelPosition = new THREE.Vector3(
         pos.x,
         pos.y + fig.positionLabel,
         pos.z
@@ -436,6 +443,12 @@ function createFigures() {
       scene.add(figure);
       console.log(figure);
       objects.push(figure);
+
+      const mesh = figure.children[figure.children.length - 1];
+      if (fig.posOffset) {
+        mesh.position.set(fig.posOffset.x, fig.posOffset.y, fig.posOffset.z);
+      }
+      updateLabel(mesh);
     });
   }
 
@@ -457,6 +470,13 @@ function createFigures() {
       return;
     }
     deleteFigure(index);
+  });
+
+  socket.on("updatePosition", (senderId, index, pos) => {
+    if (clientId === senderId) {
+      return;
+    }
+    updatePosition(index, pos);
   });
 
   for (const fig of FIGURES) {
@@ -483,6 +503,13 @@ function deleteFigure(index) {
   if (transform.object.parent === obj) {
     transform.detach();
   }
+}
+
+function updatePosition(index, pos) {
+  const obj = objects[index];
+  const mesh = obj.children[obj.children.length - 1];
+  mesh.position.set(pos.x, pos.y, pos.z);
+  updateLabel(mesh);
 }
 
 createFigures();
@@ -518,17 +545,17 @@ function resizeRendererToDisplaySize(renderer) {
 // ----------------------------------------------------------------------------
 let pickedObject, attachedTransform;
 
-function updateLabel() {
-  const posFigure = pickedObject.parent.position;
-  const posDelta = pickedObject.position;
-  const scale = pickedObject.parent.scale;
+function updateLabel(obj) {
+  const posFigure = obj.parent.position;
+  const posDelta = obj.position;
+  const scale = obj.parent.scale;
   // posFigure stays the same (spawn from figure)
   // posDelta - the delta of the figure from the original point
   // it needs to be scaled
   // label.offsetY is needed that the label is placed above the figure
-  pickedObject.parent.label.position = {
+  obj.parent.label.position = {
     x: posFigure.x + scale.x * posDelta.x,
-    y: posFigure.y + scale.y * posDelta.y + pickedObject.parent.label.offsetY,
+    y: posFigure.y + scale.y * posDelta.y + obj.parent.label.offsetY,
     z: posFigure.z + scale.z * posDelta.z,
   };
 }
