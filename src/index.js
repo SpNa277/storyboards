@@ -6,10 +6,19 @@ import { Picker, PickPosition, intersectionPosition } from "./picker.js";
 import Stats from "../node_modules/three/examples/jsm/libs/stats.module.js";
 import { BACKGROUNDS, FIGURES } from "./figure.js";
 import { exportFigures } from "./export.js";
+// server hosts the module with the socket configuration in the global variable `io`
+import "/socket.io/socket.io.js";
 
 // ----------------------------------------------------------------------------
 //  global variables
 // ----------------------------------------------------------------------------
+// eslint-disable-next-line no-undef
+const socket = io();
+let clientId;
+socket.on("id", (id) => {
+  clientId = id;
+});
+
 let scene, camera, renderer, light, controls;
 
 let objects = [];
@@ -224,12 +233,34 @@ function createStoryboard(font) {
   }
 
   const element = document.getElementById("bgEmpty");
-  element.addEventListener("click", () => addStoryboard(), false);
+  element.addEventListener(
+    "click",
+    () => {
+      addStoryboard();
+      socket.emit("addStoryboard", clientId);
+    },
+    false
+  );
 
   for (const bg of BACKGROUNDS) {
     const element = document.getElementById(bg.domElement);
-    element.addEventListener("click", () => addStoryboard(bg), false);
+    element.addEventListener(
+      "click",
+      () => {
+        addStoryboard(bg);
+        socket.emit("addStoryboard", clientId, bg);
+      },
+      false
+    );
   }
+
+  socket.on("addStoryboard", (senderId, bg) => {
+    console.log(bg, clientId, senderId);
+    if (clientId === senderId) {
+      return;
+    }
+    addStoryboard(bg);
+  });
 
   addStoryboard();
 }
@@ -460,8 +491,6 @@ function render() {
 
     transform.attach(pickedObject);
     attachedTransform = true;
-
-    window.key;
   }
   if (resizeRendererToDisplaySize(renderer)) {
     const canvas = renderer.domElement;
