@@ -353,7 +353,8 @@ function assignFiguresToStoryboard(figures) {
             (storyboard.bounds.zEnd - storyboard.bounds.zStart),
         },
       }));
-    if (storyboard.children.length > 1) {
+    // three children with background and two children without background
+    if (storyboard.children.length > 2) {
       const bg = storyboard.children[storyboard.children.length - 1];
       figs.push({
         name: bg.label.name,
