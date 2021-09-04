@@ -14,6 +14,7 @@ const server = app.listen(port, () => {
 const io = new Server(server);
 
 let historyStoryboard = [];
+let historyFigures = [];
 io.on("connection", (client) => {
   console.log(
     "User " +
@@ -31,13 +32,22 @@ io.on("connection", (client) => {
     historyStoryboard.push(bg);
   });
 
-  client.on("deleteHistory", () => {
+  client.on("deleteHistoryStoryboards", () => {
     historyStoryboard = [];
     io.sockets.emit("deleteAllStoryboards");
   });
 
-  client.on("requestHistory", () => {
-    client.emit("history", historyStoryboard);
+  client.on("requestHistoryStoryboards", () => {
+    client.emit("historyStoryboards", historyStoryboard);
+  });
+
+  client.on("spawnFigure", (senderId, pos, fig) => {
+    io.sockets.emit("spawnFigure", senderId, pos, fig);
+    historyFigures.push({ pos, fig });
+  });
+
+  client.on("requestHistoryFigures", () => {
+    client.emit("historyFigures", historyFigures);
   });
 
   client.emit("id", client.id);

@@ -255,14 +255,13 @@ function createStoryboard(font) {
   }
 
   socket.on("addStoryboard", (senderId, bg) => {
-    console.log(bg, clientId, senderId);
     if (clientId === senderId) {
       return;
     }
     addStoryboard(bg);
   });
 
-  socket.on("history", (historyStoryboard) => {
+  socket.on("historyStoryboards", (historyStoryboard) => {
     for (const bg of historyStoryboard) {
       addStoryboard(bg);
     }
@@ -275,7 +274,7 @@ function createStoryboard(font) {
     "click",
     () => {
       deleteAllStoryboards();
-      socket.emit("deleteHistory");
+      socket.emit("deleteHistoryStoryboards");
     },
     false
   );
@@ -292,7 +291,7 @@ function createStoryboard(font) {
   }
 
   addStoryboard();
-  socket.emit("requestHistory");
+  socket.emit("requestHistoryStoryboards");
 }
 
 // ----------------------------------------------------------------------------
@@ -421,10 +420,7 @@ function renderLabels() {
 }
 
 function createFigures() {
-  function spawnFigure(event, fig) {
-    dropPosition.setPosition(event, renderer.domElement);
-    const pos = intersectionPosition(dropPosition, camera, storyboards); //here it depends what you want to intersect with
-
+  function spawnFigure(pos, fig) {
     // figures can be positioned just on the storyboard. In this case the user didn't drop the figure on the storyboard.
     if (pos === undefined) {
       return;
@@ -448,14 +444,33 @@ function createFigures() {
     });
   }
 
+  socket.on("spawnFigure", (senderId, pos, fig) => {
+    if (clientId === senderId) {
+      return;
+    }
+    spawnFigure(pos, fig);
+  });
+
+  socket.on("historyFigures", (historyFigures) => {
+    for (const { pos, fig } of historyFigures) {
+      spawnFigure(pos, fig);
+    }
+  });
+
   for (const fig of FIGURES) {
     const element = document.getElementById(fig.domElement);
     element.addEventListener(
       "dragend",
-      (event) => spawnFigure(event, fig),
+      (event) => {
+        dropPosition.setPosition(event, renderer.domElement);
+        const pos = intersectionPosition(dropPosition, camera, storyboards); //here it depends what you want to intersect with
+        spawnFigure(pos, fig);
+        socket.emit("spawnFigure", clientId, pos, fig);
+      },
       false
     );
   }
+  socket.emit("requestHistoryFigures");
 }
 
 createFigures();
