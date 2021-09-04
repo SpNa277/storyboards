@@ -12,7 +12,7 @@ import { exportFigures } from "./export.js";
 // ----------------------------------------------------------------------------
 let scene, camera, renderer, light, controls;
 
-const objects = [];
+let objects = [];
 const storyboards = [];
 
 let transform;
@@ -109,8 +109,23 @@ let init = function () {
       case "s":
         transform.setMode("scale");
         break;
+      case "Delete":
+      case "Backspace":
+        deleteFigure();
+        break;
     }
   });
+
+  function deleteFigure() {
+    if (pickedObject === undefined) {
+      return;
+    }
+    objects = objects.filter((obj) => obj !== pickedObject.parent);
+    scene.remove(pickedObject.parent);
+    // delete label
+    pickedObject.parent.label.elem.remove();
+    transform.detach();
+  }
 
   // --- add event listener --- //
   window.addEventListener("click", (event) =>
@@ -429,11 +444,6 @@ function updateLabel() {
     z: posFigure.z + scale.z * posDelta.z,
   };
 }
-
-//TO DO --- delete/remove pickedObject
-/*function removePickedObject(event) {
-  if (event.keyCode == d) scene.remove(pickedObject);
-}*/
 
 function render() {
   controls.update();
