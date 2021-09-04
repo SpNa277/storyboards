@@ -114,6 +114,7 @@ body {
 
 .label {
   width: fit-content;
+  position: absolute;
 }
 
 #export {
