@@ -262,7 +262,15 @@ function createStoryboard(font) {
     addStoryboard(bg);
   });
 
+  socket.on("history", (historyStoryboard) => {
+    for (const bg of historyStoryboard) {
+      addStoryboard(bg);
+    }
+  });
+
   addStoryboard();
+
+  socket.emit("requestHistory");
 }
 
 // ----------------------------------------------------------------------------
