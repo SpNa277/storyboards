@@ -178,7 +178,7 @@ function createStoryboard(font) {
         background.position.set(
           board.position.x,
           boardWall.position.y + 7 / bg.scale.y,
-          boardWall.position.z + 0.455
+          boardWall.position.z + 0.451
         );
         background.label = {
           name: bg.name,
