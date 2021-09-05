@@ -98,7 +98,7 @@ export const FIGURES = [
     type: "Speech_Bubble",
   },
   {
-    name: "Crying Bubble",
+    name: "Yelling Bubble",
     domElement: "speechbubble2",
     imagePath: "./img/speech_bubble_2.glb",
     scale: {
@@ -228,9 +228,9 @@ export const FIGURES = [
     domElement: "desk",
     imagePath: "./img/desk.glb",
     scale: {
-      x: 1,
-      y: 1,
-      z: 1,
+      x: 2,
+      y: 2,
+      z: 2,
     },
     dropHeight: 0.5,
     positionLabel: 3,
@@ -238,13 +238,13 @@ export const FIGURES = [
     type: "Laptop_Setting_01",
   },
   {
-    name: "Flipchart",
+    name: "Whiteboard",
     domElement: "flipchart",
     imagePath: "./img/flipchart.glb",
     scale: {
-      x: 1,
-      y: 1,
-      z: 1,
+      x: 2,
+      y: 2,
+      z: 2,
     },
     dropHeight: 0.5,
     positionLabel: 3,
@@ -428,7 +428,7 @@ export const BACKGROUNDS = [
     imagePath: "./img/meeting_room.glb",
     scale: {
       x: 13.6,
-      y: 14.2,
+      y: 14.1,
       z: 1,
     },
     dropHeight: 3,
@@ -442,7 +442,7 @@ export const BACKGROUNDS = [
     imagePath: "./img/coffee_corner.glb",
     scale: {
       x: 14,
-      y: 14,
+      y: 14.5,
       z: 14,
     },
     dropHeight: 3,
@@ -469,8 +469,8 @@ export const BACKGROUNDS = [
     domElement: "kitchenButton",
     imagePath: "./img/kitchen.glb",
     scale: {
-      x: 14,
-      y: 14,
+      x: 14.2,
+      y: 14.1,
       z: 14,
     },
     dropHeight: 3,
