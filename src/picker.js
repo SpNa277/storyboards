@@ -44,7 +44,8 @@ export class PickPosition {
   setPosition(event, domElement) {
     const pos = getCanvasRelativePosition(event, domElement);
     this.x = (pos.x / domElement.width) * 2 - 1;
-    this.y = (pos.y / domElement.height) * -2 + 1; // note we flip Y
+    // flip Y
+    this.y = (pos.y / domElement.height) * -2 + 1;
     this.absX = pos.x;
     this.absY = pos.y;
   }
@@ -61,7 +62,8 @@ function getCanvasRelativePosition(event, domElement) {
 export function intersectionPosition(normalizedPosition, camera, objects) {
   const raycaster = new THREE.Raycaster();
 
-  raycaster.setFromCamera(normalizedPosition, camera); //updates the ray with a new origin and direction.
+  // updates the ray with a new origin and direction
+  raycaster.setFromCamera(normalizedPosition, camera);
   // get the list of objects the ray intersected
   const intersectedObjects = raycaster.intersectObjects(objects, true);
   if (intersectedObjects.length) {

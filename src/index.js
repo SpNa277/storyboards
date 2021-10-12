@@ -67,8 +67,10 @@ let init = function () {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.outputEncoding = THREE.sRGBEncoding; //configure textures referenced from .glb
-  container.appendChild(renderer.domElement); // to be able to locate on the browser
+  // configure textures referenced from .glb
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  // to locate on the browser
+  container.appendChild(renderer.domElement);
 
   // --- create the floor --- //
   const grid = new THREE.GridHelper(1000, 200);
@@ -88,14 +90,14 @@ let init = function () {
     }
   );
 
-  // --- add the Orbit Control, it rotates the camera and enforces the camera up direction--- //
+  // --- Orbit Control to rotate the camera --- //
   controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 1.6, 0);
   controls.listenToKeyEvents(window);
   controls.keyPanSpeed = 30;
   controls.update();
 
-  // --- add the transform Controls, it makes it possible to move, rotate and scale the objects --- //
+  // --- Transform Controls to make it possible to move, rotate and scale the objects --- //
   transform = new TransformControls(camera, renderer.domElement);
   transform.addEventListener("objectChange", () => {
     updateLabel(pickedObject);
@@ -138,7 +140,7 @@ let init = function () {
     }
   });
 
-  // --- add event listener --- //
+  // --- addEventListeners --- //
   window.addEventListener("click", (event) =>
     pickPosition.setPosition(event, renderer.domElement)
   );
@@ -297,7 +299,7 @@ function createStoryboard(font) {
 }
 
 // ----------------------------------------------------------------------------
-//  Create Export Button and Download XML File to import to Scene2Model
+//  Create Export Button and Download XML-File
 // ----------------------------------------------------------------------------
 const exportButton = document.getElementById("export");
 exportButton.addEventListener("click", exportXML, false);
@@ -325,7 +327,7 @@ function exportXML() {
   exportFigures(normalizedFigures);
 }
 
-// sorts the figures to the corresponding storyboard if there are within the boundaries of the storyboard,
+// sorts figures to the corresponding storyboard if there are within the boundaries of the storyboard,
 // and normalize coordinates between 0 and 1.
 function assignFiguresToStoryboard(figures) {
   return storyboards.map((storyboard) => {
@@ -424,7 +426,8 @@ function renderLabels() {
 
 function createFigures() {
   function spawnFigure(pos, fig) {
-    // figures can be positioned just on the storyboard. In this case the user didn't drop the figure on the storyboard.
+    // figures can be positioned just on the storyboard.
+    // In this case the user didn't drop the figure on the storyboard.
     if (pos === undefined) {
       return;
     }
@@ -439,7 +442,8 @@ function createFigures() {
         pos.y + fig.positionLabel,
         pos.z
       );
-      figure.label = createLabel(fig, labelPosition); //here the adding of the label to the figure
+      // label gets added to the figure
+      figure.label = createLabel(fig, labelPosition);
       figure.label.offsetY = labelPosition.y - figure.position.y;
       scene.add(figure);
       console.log(figure);
@@ -486,7 +490,8 @@ function createFigures() {
       "dragend",
       (event) => {
         dropPosition.setPosition(event, renderer.domElement);
-        const pos = intersectionPosition(dropPosition, camera, storyboards); //here it depends what you want to intersect with
+        // depends what you want to intersect with
+        const pos = intersectionPosition(dropPosition, camera, storyboards);
         spawnFigure(pos, fig);
         socket.emit("spawnFigure", clientId, pos, fig);
       },
