@@ -1,0 +1,17 @@
+Diegimo instrukcijos
+=========================
+
+Daugeliu atvejų jums reikės sukonfigūruoti serverį taip,
+kad būtų naudojami šie du failai: diufvm08_unifr_ch.crt ir DigiCertCA.crt.
+
+Mūsų internetinius diegimo vadovus galite rasti čia:
+
+https://www.digicert.com/ssl-certificate-installation.htm
+
+Įdiegę savo sertifikatą, galite patikrinti, ar jis yra
+tinkamai įdiegtas naudodami mūsų sertifikatų testavimo įrankį:
+
+https://www.digicert.com/help/
+
+Jei diegdami savo sertifikatą susiduriate su sunkumais, prašome
+kreipkitės pagalbos į mūsų draugišką palaikymo komandą.

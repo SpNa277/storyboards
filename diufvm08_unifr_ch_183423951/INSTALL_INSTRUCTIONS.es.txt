@@ -1,0 +1,14 @@
+Instrucciones de Instalación
+=========================
+
+En la mayoría de los casos, sólo hay que configurar el servidor para que utilice estos dos archivos: diufvm08_unifr_ch.crt y DigiCertCA.crt.
+
+Se pueden ver nuestras guías de instalación aquí:
+
+https://www.digicert.com/es/instalar-certificado-ssl.htm
+
+Tras instalar el certificado, puede verificar la instalación utilizando nuestra Herramienta Diagnóstica:
+
+https://www.digicert.com/es/ayuda/
+
+Si experimenta dificultades al intentar instalar su certificado, favor de ponerse en contacto con nuestro amigable equipo de soporte.
