@@ -9,6 +9,7 @@ import { exportFigures } from "./export.js";
 // server hosts the module with the socket configuration in the global variable `io`
 import "/socket.io/socket.io.js";
 
+
 // ----------------------------------------------------------------------------
 //  global variables
 // ----------------------------------------------------------------------------
@@ -42,6 +43,16 @@ document.body.appendChild(stats.domElement);
 // ----------------------------------------------------------------------------
 //  Init Function - initialize the project
 // ----------------------------------------------------------------------------
+
+function initControls(){
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 1.6, 0);
+  controls.listenToKeyEvents(window);
+  controls.keyPanSpeed = 30;
+  controls.update();
+}
+
+
 let init = function () {
   // --- create the scene --- //
   scene = new THREE.Scene();
@@ -91,11 +102,9 @@ let init = function () {
   );
 
   // --- Orbit Control to rotate the camera --- //
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.target.set(0, 1.6, 0);
-  controls.listenToKeyEvents(window);
-  controls.keyPanSpeed = 30;
-  controls.update();
+ 
+
+  initControls();
 
   // --- Transform Controls to make it possible to move, rotate and scale the objects --- //
   transform = new TransformControls(camera, renderer.domElement);
@@ -384,8 +393,10 @@ function assignFiguresToStoryboard(figures) {
 // ----------------------------------------------------------------------------
 //  Create Labels and SAP Figures
 // ----------------------------------------------------------------------------
-const labelContainer = document.getElementById("labels");
-const labels = [];
+let labelContainer = document.getElementById("labels");
+let labels = [];
+
+
 
 function createLabel(fig, position) {
   const label = {
@@ -566,6 +577,8 @@ function updateLabel(obj) {
   };
 }
 
+
+
 function render() {
   controls.update();
   stats.update();
@@ -598,3 +611,124 @@ function render() {
 // -------------------- calls the init function when the window is done loading
 init();
 render();
+
+var loader = new THREE.ObjectLoader();
+//initEventDrag();
+//initEventLabelChange();
+
+//------------------------------------------------------
+//section for the update of the labels in all clients
+let oldLabelContainer = '';
+function initEventLabelChange(){
+$('#labels').on('DOMSubtreeModified', async function() {
+  let labelInnerHTML = document.querySelector('#labels').innerHTML;
+
+    console.log('changed: ' + labelInnerHTML.toString());
+  if (labelInnerHTML.toString() === oldLabelContainer.toString()){
+    oldLabelContainer = labelInnerHTML.toString();
+    console.log('do nothing')
+  }
+  else{
+        oldLabelContainer = labelInnerHTML;
+
+        setTimeout(() => {
+          socket.emit('labelsChanged', labelInnerHTML);
+        }, 100);
+
+  }
+  
+});
+}
+
+socket.on("updateLabelElement", (htmlElement) => {
+  let labelInnerHTML = document.querySelector('#labels').innerHTML;
+  let label = document.querySelector('#labels');
+
+  //console.log('got from server ' + htmlElement)
+  //console.log('the local old instance is ' + oldLabelContainer.toString())
+  //console.log('the local actual instance is ' +labelInnerHTML)
+  
+  if (oldLabelContainer.toString() === htmlElement.toString()){
+    console.log('already up to date')
+    
+  }
+  else{
+    label.innerHTML = htmlElement;
+    objects.forEach(group => {
+      
+      
+    });
+    //labels.forEach(label => updateLabel(label))
+  }
+
+});
+
+
+//------------------------------------------------------
+
+
+
+//------------------------------------------------------
+//section for the navigator update in all clients
+let oldCamera;
+function initEventDrag(){
+
+controls.addEventListener('end',function(){
+  if (JSON.stringify(camera) != JSON.stringify(oldCamera)){
+  socket.emit('navigatorUpdated', camera, clientId);
+  }
+});
+}
+
+
+
+
+
+socket.on("updateNavigator", (cont, cliId) => {
+  if (cliId != clientId){
+    let loaded = loader.parse(cont);
+
+    if (JSON.stringify(loaded) === JSON.stringify(camera)){
+      
+    }
+    else{
+      controls.dispose()
+      oldCamera = loaded;
+      camera.copy(loaded); 
+      onWindowResize();
+      
+      
+      initControls();
+      initEventDrag();
+    }
+  }
+  
+});
+
+//------------------------------------------------------
+
+
+
+// setInterval(() => {
+//   let labelInnerHTML = document.querySelector('#labels').innerHTML;
+
+//   console.log('label: ' + labelInnerHTML.toString());
+// if (labelInnerHTML.toString() === oldLabelContainer.toString()){
+//   oldLabelContainer = labelInnerHTML.toString();
+//   console.log('do nothing')
+// }
+// else{
+//       oldLabelContainer = labelInnerHTML;
+//       console.log(scene.children)
+
+//       setTimeout(() => {
+//         socket.emit('labelsChanged', labelInnerHTML);
+//       }, 100);
+
+      
+  
+//         }
+      
+     
+
+// }, 1000);

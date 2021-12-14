@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "express": "^4.17.1",
+    "jquery": "^3.6.0",
     "serve": "^11.3.2",
     "socket.io": "^4.2.0",
     "three": "^0.127.0"
